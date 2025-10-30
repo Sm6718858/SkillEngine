@@ -1,0 +1,58 @@
+# Node modules
+node_modules/
+**/node_modules/
+
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Env files
+.env
+.env.local
+.env.*.local
+
+# Build outputs
+dist/
+build/
+.next/
+out/
+
+# Temp files
+*.tmp
+*.temp
+*.pid
+*.seed
+*.pid.lock
+
+# OS/System files
+.DS_Store
+Thumbs.db
+
+# Editor folders
+.vscode/
+.idea/
+
+# Cache
+.cache/
+.next/cache/
+*.swp
+
+# Optional: ignore uploads folder if stored locally
+uploads/
+
+# Prisma (if used)
+prisma/migrations/
+
+# Docker
+docker-data/
+
+# Logs from PM2 or other process managers
+pids
+*.sqlite-journal
+
+# Testing
+coverage/
