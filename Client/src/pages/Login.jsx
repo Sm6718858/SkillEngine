@@ -1,5 +1,6 @@
-import { AppWindowIcon, CodeIcon, Mail } from "lucide-react"
-import { useState } from "react"
+import { AppWindowIcon, CodeIcon, Loader2, Mail } from "lucide-react"
+import { useState ,useEffect} from "react"
+import { toast } from "sonner"
 
 import { Button } from "@/components/ui/button"
 import {
@@ -18,6 +19,7 @@ import {
     TabsList,
     TabsTrigger,
 } from "@/components/ui/tabs"
+import { useLoginUserMutation, useRegisterUserMutation } from "@/features/authApi"
 
 export function Login() {
 
@@ -30,9 +32,16 @@ export function Login() {
         email: "",
         password: ""
     });
+    //-----------------------------------------------------------
+
+    //RTK query hooks
+    const [registerUser, { data, error, isLoading }] = useRegisterUserMutation();
+    const [loginUser, { data: sData, error: sError, isLoading: sIsLoading }]
+        = useLoginUserMutation();
+    //---------------------------------------------------------
 
     const changeInputHandle = (e, type) => {
-        const {name, value} = e.target;
+        const { name, value } = e.target;
         if (type === "login") {
             setLoginInput({ ...loginInput, [name]: value });
         }
@@ -41,18 +50,29 @@ export function Login() {
         }
     }
 
-    const handleSubmit = async (e,type) => {
+    const handleSubmit = async (e, type) => {
         e.preventDefault();
-        if(type === "signup") {
-            console.log(signupInput);
-            setSignupInput({name: "", email: "", password: ""});
-        }
-        else {
-            console.log(loginInput);
-            setLoginInput({email: "", password: ""});
-        }
+        const inputData = type === "login" ? loginInput : signupInput;
+        const action = type === "login" ? loginUser : registerUser;
+        await action(inputData);
     }
-        
+
+
+    //Toaster
+    useEffect(() => {
+        if(data?.message){
+            toast.success(data?.message || "Signup Successful");
+        }
+        if(sData?.message){
+            toast.success(sData?.message || "Login Successful");
+        }
+        if(error?.data?.message){
+            toast.error(error.data.message);
+        }
+        if(sError?.data?.message){
+            toast.error(sError.data.message);
+        }
+    }, [data,sData,error,sError]);
 
     return (
         <div className="flex w-full max-w-sm flex-col gap-6">
@@ -84,7 +104,16 @@ export function Login() {
                             </div>
                         </CardContent>
                         <CardFooter>
-                            <Button onClick={(e) => handleSubmit(e, "signup")}>Signup</Button>
+                            <Button disabled={isLoading} onClick={(e) => handleSubmit(e, "signup")}>{
+                                isLoading ? (
+                                    <>
+                                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                                        Please Wait
+
+                                    </>
+                                ) : 'Signup'
+                            }
+                            </Button>
                         </CardFooter>
                     </Card>
                 </TabsContent>
@@ -107,7 +136,16 @@ export function Login() {
                             </div>
                         </CardContent>
                         <CardFooter>
-                            <Button onClick={(e) => handleSubmit(e, "login")}>Login</Button>
+                            <Button disabled={sIsLoading} onClick={(e) => handleSubmit(e, "login")}>{
+                                sIsLoading ? (
+                                    <>
+                                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                                        Please Wait
+
+                                    </>
+                                ) : 'Login'}
+
+                            </Button>
                         </CardFooter>
                     </Card>
                 </TabsContent>
