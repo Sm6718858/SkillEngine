@@ -7,7 +7,7 @@ import { DarkMode } from "@/DarkMode";
 import { Sheet, SheetContent, SheetTrigger, SheetClose, SheetHeader, SheetFooter } from "@/components/ui/sheet";
 
 const Navbar = () => {
-    const user = 'null'; // replace with auth user later
+    const user = 'null'; 
 
     return (
         <div className="dark:bg-gray-700 bg-white w-full h-16 fixed top-0 left-0 flex items-center justify-between px-6 md:px-10 shadow-md z-50">
@@ -85,12 +85,10 @@ const MobileNav = ({ user }) => {
 
       <SheetContent side="right" className="p-6">
         
-        {/* Branding */}
         <SheetHeader className="text-center mb-6">
           <h1 className="text-3xl font-extrabold text-blue-600">SkillEngine</h1>
         </SheetHeader>
 
-        {/* Menu Items */}
         <nav className="flex flex-col gap-5 text-lg">
 
           {user ? (
@@ -126,7 +124,6 @@ const MobileNav = ({ user }) => {
             </>
           )}
 
-          {/* Instructor Section */}
           {role === "instructor" && (
             <SheetClose asChild>
               <Button className="w-full bg-purple-600 text-white hover:bg-purple-700 mt-2">
@@ -135,7 +132,6 @@ const MobileNav = ({ user }) => {
             </SheetClose>
           )}
 
-          {/* Close btn */}
           <SheetClose asChild>
             <Button variant="ghost" className="w-full mt-4 text-gray-500 hover:text-red-600">
               Close Menu
