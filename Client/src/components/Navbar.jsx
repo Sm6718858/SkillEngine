@@ -5,6 +5,8 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel,
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { DarkMode } from "@/DarkMode";
 import { Sheet, SheetContent, SheetTrigger, SheetClose, SheetHeader, SheetFooter } from "@/components/ui/sheet";
+import { Link } from "react-router-dom";
+import MyLearning from "@/pages/student/MyLearning";
 
 const Navbar = () => {
     const user = 'null'; 
@@ -33,8 +35,8 @@ const Navbar = () => {
                         <DropdownMenuContent>
                             <DropdownMenuLabel>My Account</DropdownMenuLabel>
                             <DropdownMenuSeparator />
-                            <DropdownMenuItem>My Learning</DropdownMenuItem>
-                            <DropdownMenuItem>Edit Profile</DropdownMenuItem>
+                            <DropdownMenuItem><Link to='myLearning'>My Learning</Link></DropdownMenuItem>
+                            <DropdownMenuItem><Link to='profile'>Edit Profile</Link></DropdownMenuItem>
                             <DropdownMenuItem>Log out</DropdownMenuItem>
                             <DropdownMenuSeparator />
                             <DropdownMenuItem>Dashboard</DropdownMenuItem>
@@ -98,11 +100,11 @@ const MobileNav = ({ user }) => {
               </span>
 
               <span className="hover:text-blue-600 cursor-pointer">
-                My Learning
+                <Link to="/myLearning">My Learning</Link>
               </span>
 
               <span className="hover:text-blue-600 cursor-pointer">
-                Edit Profile
+                <Link to="/profile">Edit Profile</Link>
               </span>
 
               <Button variant="outline" className="w-full border-red-500 text-red-600 hover:bg-red-600 hover:text-white">

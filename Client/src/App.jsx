@@ -5,6 +5,8 @@ import { Login } from "@/pages/Login";
 import MainLayout from "./Layout/MainLayout";
 import { RouterProvider } from "react-router";
 import Courses from "./pages/student/Courses";
+import MyLearning from "./pages/student/MyLearning";
+import Profile from "./pages/student/Profile";
 
 function App() {
   // const showLogin = false; 
@@ -19,7 +21,10 @@ function App() {
             <Courses/>
           </>
         },
-        { path: '/login', element: <Login /> }
+        { path: '/login', element: <Login /> },
+        {path: '/myLearning', element: <MyLearning />},
+        {path: '/profile', element: <Profile />}
+
       ]
     },
   ])
