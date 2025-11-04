@@ -6,7 +6,7 @@ const USER_API = `${import.meta.env.VITE_API_BASE_URL}/api/user/`;
 
 export const authApi = createApi({
     reducerPath: 'authApi',
-    baseQuery: fetchBaseQuery({ baseUrl: USER_API,Credentials: 'include'}),
+    baseQuery: fetchBaseQuery({ baseUrl: USER_API,credentials: 'include'}),
     endpoints: (builder) => ({
         //jab fetch karna ho to Query use karenge 
         //jab data post,update,delete karna ho to Mutation use karenge
@@ -32,7 +32,13 @@ export const authApi = createApi({
                 }
             },
         }),
+        loadUser: builder.query({
+            query: () => ({
+                url: 'profile',
+                method: 'GET',
+            }),
+        })
   }),
 });
 
-export const { useRegisterUserMutation, useLoginUserMutation } = authApi;
+export const { useRegisterUserMutation, useLoginUserMutation,useLoadUserQuery } = authApi;

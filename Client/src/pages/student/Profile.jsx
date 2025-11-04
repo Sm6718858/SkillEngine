@@ -14,11 +14,20 @@ import { Label } from "@/components/ui/label";
 import { Loader2 } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import Course from "./Course";
+import { useLoadUserQuery } from "@/features/authApi";
 
 const Profile = () => {
-    const user = 'Shivam'
-    const isLoading = false;
-    const enrolledCourses = [];
+    const {data,isLoading} = useLoadUserQuery();
+
+    if(isLoading){
+        return (
+            <div className="flex items-center justify-center h-96"> 
+                <Loader2 className="h-8 w-8 text-purple-600 animate-spin" />
+            </div>
+        );
+    }
+
+    const {user} = data;
     return (
         <div className="max-w-5xl mx-auto px-4 my-12 py-8 space-y-10">
 
@@ -30,12 +39,12 @@ const Profile = () => {
 
                 <div className="flex flex-col items-center md:items-start text-center md:text-left">
                     <Avatar className="h-32 w-32 md:h-40 md:w-40 shadow-lg ring-2 ring-purple-500/50">
-                        <AvatarImage src="https://github.com/shadcn.png" alt="profile" />
+                        <AvatarImage src={user.photoUrl || "https://github.com/shadcn.png"} alt="profile" />
                         <AvatarFallback className="text-xl font-semibold">SM</AvatarFallback>
                     </Avatar>
 
                     <p className="text-sm text-gray-500 dark:text-gray-400 mt-3">
-                        Joined: Jan 2024
+                        Joined: Jan 202user
                     </p>
                 </div>
 
@@ -43,17 +52,17 @@ const Profile = () => {
                     <div className="space-y-4 border-b pb-5 border-gray-200 dark:border-gray-700">
                         <div className="flex sm:flex-row sm:items-center gap-1">
                             <span className="text-sm font-semibold text-gray-600 dark:text-gray-300 uppercase w-20">Name:</span>
-                            <span className="text-base font-medium text-gray-900 dark:text-gray-100">Shivam Mishra</span>
+                            <span className="text-base font-medium text-gray-900 dark:text-gray-100">{user.name}</span>
                         </div>
 
                         <div className="flex sm:flex-row sm:items-center gap-1">
                             <span className="text-sm font-semibold text-gray-600 dark:text-gray-300 uppercase w-20">Email:</span>
-                            <span className="text-base text-gray-800 dark:text-gray-200">sm@sm.com</span>
+                            <span className="text-base text-gray-800 dark:text-gray-200">{user.email}</span>
                         </div>
 
                         <div className="flex sm:flex-row sm:items-center gap-1">
                             <span className="text-sm font-semibold text-gray-600 dark:text-gray-300 uppercase w-20">Role:</span>
-                            <span className="text-base font-medium text-purple-600 dark:text-purple-400">Student</span>
+                            <span className="text-base font-medium text-purple-600 dark:text-purple-400">{user.role.toUpperCase()}</span>
                         </div>
                     </div>
 
@@ -102,7 +111,7 @@ const Profile = () => {
                     Courses You're Enrolled In
                 </h2>
 
-                {enrolledCourses.length === 0 ? (
+                {user?.enrolledCourses?.length === 0 ? (
                     <p className="text-center text-gray-600 dark:text-gray-400 font-medium text-lg py-10">
                         You haven't enrolled in any course yet 📚 <br />
                         <Button size="sm" className="mt-5 bg-purple-600 hover:bg-purple-700 text-white rounded-lg">
@@ -111,8 +120,8 @@ const Profile = () => {
                     </p>
                 ) : (
                     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mt-6">
-                        {enrolledCourses.map((course, i) => (
-                            <Course key={i} {...course} />
+                        {user?.enrolledCourses?.map((course, i) => (
+                            <Course course={course} key={course._id} {...course} />
                         ))}
                     </div>
                 )}

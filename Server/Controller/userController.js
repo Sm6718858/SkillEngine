@@ -1,6 +1,7 @@
 import { User } from "../Models/userModel.js";
 import bcrypt from "bcryptjs";
 import { generateToken } from "../Utils/Token.js";
+import { isAuthenticated } from "../Middleware/isAuthenticated.js";
 
 export const signUp = async (req,res) =>{
     try {
@@ -44,5 +45,27 @@ export const login = async (req,res) =>{
     } catch (error) {
         console.log("Error in login:",error);
         return res.status(500).json({success:false,message:"Internal Server Error in Login"});
+    }
+}
+
+export const Logout = (req,res) =>{
+    try {
+        return res.cookie("token","",{expires:new Date(0)}).json({success:true,message:"Logged out successfully"});
+    } catch (error) {
+        console.log("Error in Logout:",error);
+        return res.status(500).json({success:false,message:"Internal Server Error in Logout"});
+    }
+}
+export const getUserProfile = async (req,res) =>{
+    try {
+        const userId = req.id;
+        const user = await User.findById(userId).select("-password");
+        if(!user){
+            return res.status(404).json({success:false,message:"User not found"});
+        }
+        return res.status(200).json({success:true,user});
+    } catch (error) {
+        console.log("Error in getProfile:",error);
+        return res.status(500).json({success:false,message:"Internal Server Error in GetProfile"});
     }
 }
