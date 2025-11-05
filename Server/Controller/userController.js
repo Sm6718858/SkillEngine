@@ -93,13 +93,13 @@ export const updateProfile = async (req, res) => {
           const publicId = user.photoUrl.split("/").pop().split(".")[0];
           await deleteMediaFromCloudinary(publicId);
         } catch (err) {
-          console.warn("⚠️ Failed to delete old image:", err.message);
+          console.warn("Failed to delete old image:", err.message);
         }
       }
 
       try {
         const cloudResponse = await uploadMedia(req.file.path);
-        console.log("Cloudinary upload response:", cloudResponse);
+        // console.log("Cloudinary upload response:", cloudResponse);
         if (!cloudResponse?.secure_url) {
           throw new Error("No secure_url returned from Cloudinary");
         }
