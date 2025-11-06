@@ -17,9 +17,12 @@ import Course from "./Course";
 import { useLoadUserQuery, useUpdateUserMutation } from "@/features/authApi";
 import { toast } from "sonner";
 
+
 const Profile = () => {
   const { data, isLoading, refetch } = useLoadUserQuery();
   const [updateUser, { isLoading: updateIsLoading }] = useUpdateUserMutation();
+ 
+
 
   const [name, setName] = useState("");
   const [profilePhoto, setProfilePhoto] = useState(null);
@@ -70,7 +73,6 @@ const Profile = () => {
       </h1>
 
       <div className="bg-white dark:bg-gray-900 shadow-md rounded-2xl p-8 border border-gray-200 dark:border-gray-700 flex flex-col md:flex-row gap-10 md:gap-12">
-        {/* Avatar */}
         <div className="flex flex-col items-center md:items-start text-center md:text-left">
           <Avatar className="h-32 w-32 md:h-40 md:w-40 shadow-lg ring-2 ring-purple-500/50">
             <AvatarImage
@@ -90,7 +92,6 @@ const Profile = () => {
           </p>
         </div>
 
-        {/* Info */}
         <div className="flex-1">
           <div className="space-y-4 border-b pb-5 border-gray-200 dark:border-gray-700">
             <div className="flex sm:flex-row sm:items-center gap-1">
@@ -121,7 +122,6 @@ const Profile = () => {
             </div>
           </div>
 
-          {/* Edit Dialog */}
           <Dialog>
             <DialogTrigger asChild>
               <Button className="mt-5 bg-purple-600 hover:bg-purple-700 text-white rounded-lg">
@@ -178,7 +178,6 @@ const Profile = () => {
         </div>
       </div>
 
-      {/* Courses */}
       <div>
         <h2 className="font-bold text-xl text-gray-800 dark:text-gray-200 mb-4">
           Courses You're Enrolled In
