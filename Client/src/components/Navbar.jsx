@@ -9,9 +9,11 @@ import { Link, useNavigate } from "react-router-dom";
 import MyLearning from "@/pages/student/MyLearning";
 import { useLogoutUserMutation } from "@/features/authApi";
 import { toast } from "sonner";
+import { useSelector } from "react-redux";
 
 const Navbar = () => {
-  const user = 'null';
+  // const user = 'null';
+  const user = useSelector(store=>store.auth);
   const [logoutUser, { isSuccess, isdata }] = useLogoutUserMutation();
   const navigate = useNavigate();
 
@@ -41,7 +43,7 @@ const Navbar = () => {
           <DropdownMenu>
             <DropdownMenuTrigger className="outline-none border-none p-0 rounded-full hover:opacity-80">
               <Avatar>
-                <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
+                <AvatarImage src={user?.user?.photoUrl || "https://github.com/shadcn.png"} alt="@shadcn" />
                 <AvatarFallback>CN</AvatarFallback>
               </Avatar>
             </DropdownMenuTrigger>
