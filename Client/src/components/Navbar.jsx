@@ -7,13 +7,15 @@ import { DarkMode } from "@/DarkMode";
 import { Sheet, SheetContent, SheetTrigger, SheetClose, SheetHeader, SheetFooter } from "@/components/ui/sheet";
 import { Link, useNavigate } from "react-router-dom";
 import MyLearning from "@/pages/student/MyLearning";
-import { useLogoutUserMutation } from "@/features/authApi";
+import { useLoadUserQuery, useLogoutUserMutation } from "@/features/authApi";
 import { toast } from "sonner";
 import { useSelector } from "react-redux";
 
+
 const Navbar = () => {
   // const user = 'null';
-  const user = useSelector(store=>store.auth);
+  const { data, isLoading } = useLoadUserQuery();
+  const {user} = useSelector(store=>store.auth);
   const [logoutUser, { isSuccess, isdata }] = useLogoutUserMutation();
   const navigate = useNavigate();
 
@@ -43,7 +45,7 @@ const Navbar = () => {
           <DropdownMenu>
             <DropdownMenuTrigger className="outline-none border-none p-0 rounded-full hover:opacity-80">
               <Avatar>
-                <AvatarImage src={user?.user?.photoUrl || "https://github.com/shadcn.png"} alt="@shadcn" />
+                <AvatarImage src={user?.photoUrl || "https://github.com/shadcn.png"} alt="@shadcn" />
                 <AvatarFallback>CN</AvatarFallback>
               </Avatar>
             </DropdownMenuTrigger>
@@ -54,13 +56,19 @@ const Navbar = () => {
               <DropdownMenuItem><Link to='profile'>Edit Profile</Link></DropdownMenuItem>
               <DropdownMenuItem onClick={handleLogout}>Log out</DropdownMenuItem>
               <DropdownMenuSeparator />
-              <DropdownMenuItem>Dashboard</DropdownMenuItem>
+              {
+                user.role === 'instructor' && (
+                  <>
+                  <DropdownMenuItem>Dashboard</DropdownMenuItem>
+                  </>
+                )
+              }
             </DropdownMenuContent>
           </DropdownMenu>
         ) : (
           <div className="flex gap-3">
-            <Button className="bg-blue-600 text-white">Login</Button>
-            <Button variant="outline" className="border-blue-500 text-blue-500 hover:bg-blue-500 hover:text-white">
+            <Button onClick={()=>navigate('/login')} className="bg-blue-600 text-white">Login</Button>
+            <Button onClick={()=>navigate('/login')} variant="outline" className="border-blue-500 text-blue-500 hover:bg-blue-500 hover:text-white">
               Signup
             </Button>
           </div>
@@ -141,11 +149,12 @@ const MobileNav = ({ user }) => {
             </>
           ) : (
             <>
-              <Button className="bg-blue-600 text-white w-full">
+              <Button onClick={()=>navigate('/login')} className="bg-blue-600 text-white w-full">
                 Login
               </Button>
 
               <Button
+              onClick={()=>navigate('/login')} 
                 variant="outline"
                 className="w-full border-blue-500 text-blue-500 hover:bg-blue-500 hover:text-white"
               >

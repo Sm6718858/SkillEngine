@@ -19,11 +19,12 @@ import {
     TabsList,
     TabsTrigger,
 } from "@/components/ui/tabs"
-import { useLoginUserMutation, useRegisterUserMutation } from "@/features/authApi"
+import { useLoadUserQuery, useLoginUserMutation, useRegisterUserMutation } from "@/features/authApi"
 import { useNavigate } from "react-router-dom"
 
 export function Login() {
 
+    const {refetch} = useLoadUserQuery();
     const [loginInput, setLoginInput] = useState({
         email: "",
         password: ""
@@ -66,6 +67,7 @@ export function Login() {
         }
         if (sData?.message) {
             toast.success(sData?.message || "Login Successful");
+            refetch();  
             navigate('/');
         }
         if (error?.data?.message) {
