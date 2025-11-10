@@ -9,7 +9,8 @@ import MyLearning from "./pages/student/MyLearning";
 import Profile from "./pages/student/Profile";
 import Sidebar from "./pages/admin/Sidebar";
 import Dashboard from "./pages/admin/Dashboard";
-import courseTable from './pages/admin/course/courseTable'
+import CourseTable from "./pages/admin/course/courseTable";
+import AddCourse from "./pages/admin/course/addCourse";
 
 function App() {
   // const showLogin = false; 
@@ -37,7 +38,11 @@ function App() {
             },
             {
               path: 'course',
-              element: <courseTable/>
+              element: <CourseTable/>
+            },
+            {
+              path: 'course/create',
+              element: <AddCourse/>
             }
           ]
         }
