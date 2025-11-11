@@ -10,13 +10,45 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { useCreateCourseMutation } from "@/features/courseApi";
 import { Loader2 } from "lucide-react";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { toast } from "sonner";
 
 const AddCourse = () => {
-  const isLoading = false;
+  const [courseTitle, setCourseTitle] = useState("");
+  const [category, setCategory] = useState("");
+
   const navigate = useNavigate();
+
+  const [createCourse, { isLoading, isSuccess, error }] =
+    useCreateCourseMutation();
+
+  const selectCategory = (value) => {
+    setCategory(value);
+  };
+
+  const addCourse = async (e) => {
+    e.preventDefault();
+
+    if (!courseTitle || !category) {
+      toast.error("Please fill all fields");
+      return;
+    }
+
+    await createCourse({ courseTitle, category });
+  };
+
+  useEffect(() => {
+    if (isSuccess) {
+      toast.success("Course Created Successfully");
+      navigate("/admin/course"); 
+    }
+    if (error) {
+      toast.error(error?.data?.message || "Error creating course");
+    }
+  }, [isSuccess, error, navigate]);
 
   return (
     <div className="flex-1 mx-auto max-w-3xl px-6 py-10">
@@ -35,13 +67,15 @@ const AddCourse = () => {
           <Input
             type="text"
             placeholder="Enter your course name"
+            value={courseTitle}
+            onChange={(e) => setCourseTitle(e.target.value)}
             className="h-11"
           />
         </div>
 
         <div className="space-y-2">
           <Label className="font-semibold">Category</Label>
-          <Select>
+          <Select onValueChange={selectCategory}>
             <SelectTrigger className="w-full h-11">
               <SelectValue placeholder="Select a category" />
             </SelectTrigger>
@@ -74,7 +108,7 @@ const AddCourse = () => {
             Back
           </Button>
 
-          <Button disabled={isLoading} className="px-6">
+          <Button disabled={isLoading} onClick={addCourse} className="px-6">
             {isLoading ? (
               <>
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
