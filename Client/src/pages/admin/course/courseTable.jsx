@@ -9,6 +9,7 @@ import {
   TableBody,
   TableHeader,
 } from "@/components/ui/table";
+import { useCreatorCourseQuery } from "@/features/courseApi";
 
 import { Edit } from "lucide-react";
 import React from "react";
@@ -16,25 +17,19 @@ import { useNavigate } from "react-router-dom";
 
 const CourseTable = () => {
   const navigate = useNavigate();
+  const { data, isLoading, isError } = useCreatorCourseQuery();
 
-  const data = {
-    courses: [
-      {
-        _id: "1",
-        courseTitle: "JavaScript Basics",
-        isPublished: true,
-      },
-      {
-        _id: "2",
-        courseTitle: "React for Beginners",
-        isPublished: false,
-      },
-    ],
-  };
+  if (isLoading) return <p className="p-4">Loading...</p>;
+  if (isError) return <p className="p-4">Something went wrong.</p>;
 
   return (
     <div className="p-4 mt-7 pt-7">
-      <Button onClick={()=> navigate('/admin/course/create')} className="mb-4">Create a new course</Button>
+      <Button
+        onClick={() => navigate("/admin/course/create")}
+        className="mb-4"
+      >
+        Create a new course
+      </Button>
 
       <Table>
         <TableCaption>A list of your recent courses.</TableCaption>
@@ -49,9 +44,9 @@ const CourseTable = () => {
         </TableHeader>
 
         <TableBody>
-          {data.courses.map((course) => (
+          {data?.courses?.map((course) => (
             <TableRow key={course._id}>
-              <TableCell className="font-medium">NA</TableCell>
+              <TableCell className="font-medium">{course.coursePrice}</TableCell>
 
               <TableCell>
                 <Badge>{course.isPublished ? "Published" : "Draft"}</Badge>
@@ -63,7 +58,9 @@ const CourseTable = () => {
                 <Button
                   size="sm"
                   variant="ghost"
-                  onClick={() => navigate(`/dashboard/course/${course._id}`)}
+                  onClick={() =>
+                    navigate(`/dashboard/course/${course._id}`)
+                  }
                 >
                   <Edit />
                 </Button>

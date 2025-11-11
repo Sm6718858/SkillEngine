@@ -9,7 +9,7 @@ export const createCourse = async (req,res) =>{
                 message:"All fields required"
             });
         }
-        const course = Course.create({
+        const course = await Course.create({
             courseTitle,category,creator:req.id
         })
         return res.status(201).json({
@@ -23,3 +23,23 @@ export const createCourse = async (req,res) =>{
         })
     }
 }
+
+export const CreatorCourses = async (req, res) => {
+    try {
+        const userId = req.id;
+
+        const courseList = await Course.find({ creator: userId });
+
+        return res.status(200).json({
+            success: true,
+            message: "All courses fetched successfully",
+            courses: courseList,
+        });
+
+    } catch (error) {
+        return res.status(500).json({
+            success: false,
+            message: "Error from CreatorCourses endpoint",
+        });
+    }
+};
