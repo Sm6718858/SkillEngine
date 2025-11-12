@@ -11,6 +11,7 @@ import Sidebar from "./pages/admin/Sidebar";
 import Dashboard from "./pages/admin/Dashboard";
 import CourseTable from "./pages/admin/course/courseTable";
 import AddCourse from "./pages/admin/course/addCourse";
+import EditCourse from "./pages/admin/course/editCourse";
 
 function App() {
   // const showLogin = false; 
@@ -43,6 +44,10 @@ function App() {
             {
               path: 'course/create',
               element: <AddCourse/>
+            },
+            {
+              path: 'edit/course',
+              element: <EditCourse/>
             }
           ]
         }
