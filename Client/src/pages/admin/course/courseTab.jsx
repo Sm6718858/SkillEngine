@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import RichTextEditor from "@/components/RichTextEditor";
+
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -37,6 +38,8 @@ const CourseTab = () => {
     courseThumbnail: null,
   });
 
+  const [previewThumbnail,setPreviewThumbnail] = useState("");
+
   const changeEventHandler = (e) => {
     const { name, value } = e.target;
     setInput((prev) => ({ ...prev, [name]: value }));
@@ -53,6 +56,9 @@ const CourseTab = () => {
   const selectThumbnail = (e) => {
     const file = e.target.files[0];
     if (file) setInput((prev) => ({ ...prev, courseThumbnail: file }));
+    const fileReader = new FileReader();
+    fileReader.onloadend = () => setPreviewThumbnail(fileReader.result);
+    fileReader.readAsDataURL(file);
   };
 
   const handleSave = () => {
@@ -110,7 +116,8 @@ const CourseTab = () => {
 
           <div>
             <Label>Description</Label>
-            {/* <RichTextEditor input={input} setInput={setInput} /> */}
+             <RichTextEditor input={input} setInput={setInput} />
+
           </div>
 
           <div className="flex flex-wrap gap-5">
@@ -185,6 +192,11 @@ const CourseTab = () => {
               accept="image/*"
               className="w-fit"
             />
+            {
+              previewThumbnail && (
+                <img src={previewThumbnail} className="e-64 my-2" alt="courseThumbnail"/>
+              )
+            }
           </div>
 
           <div className="space-x-3">
