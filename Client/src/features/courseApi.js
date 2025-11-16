@@ -21,8 +21,22 @@ export const CourseApi = createApi({
                 method:'GET',
             }),
             providesTags: ["Course"],
+        }),
+        editCourse:builder.mutation({
+            query:({formData, courseId }) =>({
+                url:`/${courseId}`,
+                method:'PUT',
+                body:formData
+            }),
+            invalidatesTags: ["Course"],
+        }),
+        courseById:builder.query({
+            query:(courseId)=>({
+                url:`/${courseId}`,
+                method:'GET',
+            })
         })
     })
 });
 
-export const {useCreateCourseMutation,useCreatorCourseQuery} = CourseApi;
+export const {useCreateCourseMutation,useCreatorCourseQuery,useEditCourseMutation,useCourseByIdQuery} = CourseApi;

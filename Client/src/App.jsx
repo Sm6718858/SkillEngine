@@ -46,7 +46,7 @@ function App() {
               element: <AddCourse/>
             },
             {
-              path: 'edit/course',
+              path: 'course/:courseId',
               element: <EditCourse/>
             }
           ]

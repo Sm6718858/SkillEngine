@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import RichTextEditor from "@/components/RichTextEditor";
 
 import { Button } from "@/components/ui/button";
@@ -22,11 +22,17 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Loader2 } from "lucide-react";
+import { toast } from "sonner";
+
+import { useCourseByIdQuery, useEditCourseMutation } from "@/features/courseApi";
 
 const CourseTab = () => {
-  const [isPublished, setIsPublished] = useState(true);
-  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
+  const { courseId } = useParams();
+
+  const [isPublished, setIsPublished] = useState(true);
+  const [editCourse, { isLoading, isSuccess, data, error }] = useEditCourseMutation();
+  const {data:courseData} = useCourseByIdQuery(courseId);
 
   const [input, setInput] = useState({
     courseTitle: "",
@@ -38,52 +44,77 @@ const CourseTab = () => {
     courseThumbnail: null,
   });
 
-  const [previewThumbnail,setPreviewThumbnail] = useState("");
+  const [previewThumbnail, setPreviewThumbnail] = useState("");
 
   const changeEventHandler = (e) => {
     const { name, value } = e.target;
     setInput((prev) => ({ ...prev, [name]: value }));
   };
 
-  const selectCourseLevel = (value) => {
+  const selectCourseLevel = (value) =>
     setInput((prev) => ({ ...prev, courseLevel: value }));
-  };
 
-  const selectCategory = (value) => {
+  const selectCategory = (value) =>
     setInput((prev) => ({ ...prev, category: value }));
+
+  const updateCourseHandler = async () => {
+    const formData = new FormData();
+    for (const key in input) {
+      const value = input[key];  
+      formData.append(key, value);
+    }
+    await editCourse({ formData, courseId });
   };
 
   const selectThumbnail = (e) => {
     const file = e.target.files[0];
-    if (file) setInput((prev) => ({ ...prev, courseThumbnail: file }));
+    if (!file) return;
+
+    setInput((prev) => ({ ...prev, courseThumbnail: file }));
+
     const fileReader = new FileReader();
     fileReader.onloadend = () => setPreviewThumbnail(fileReader.result);
     fileReader.readAsDataURL(file);
   };
 
-  const handleSave = () => {
-    setIsLoading(true);
-    setTimeout(() => {
-      console.log("Course Saved:", input);
-      setIsLoading(false);
+useEffect(() => {
+  if (courseData?.course) {
+    const c = courseData.course;
+
+    setInput({
+      courseTitle: c.courseTitle || "",
+      subTitle: c.subTitle || "",
+      description: c.description || "",
+      category: c.category || "",
+      courseLevel: c.courseLevel || "",
+      coursePrice: c.coursePrice || "",
+      courseThumbnail: null,
+    });
+
+    setPreviewThumbnail(c.thumbnail); 
+  }
+}, [courseData]);
+
+
+  useEffect(() => {
+    if (isSuccess) {
+      toast.success(data?.message || "Course updated successfully!");
       navigate("/admin/course");
-    }, 1500);
-  };
+    }
+    if (error) {
+      toast.error(error?.data?.message || "Failed to update course");
+    }
+  }, [isSuccess, error]);
 
   return (
     <Card className="shadow-md">
       <CardHeader className="flex flex-row justify-between items-start">
         <div>
-          <CardTitle>Basic Course Information</CardTitle>
-          <CardDescription>
-            Add or update course details below. Click save when you’re done.
-          </CardDescription>
+          <CardTitle>Edit Course</CardTitle>
+          <CardDescription>Update the course details below.</CardDescription>
         </div>
         <div className="space-x-2">
-          <Button
-            variant="outline"
-            onClick={() => setIsPublished((prev) => !prev)}
-          >
+          <Button variant="outline" onClick={() => setIsPublished(!isPublished)}>
             {isPublished ? "Unpublish" : "Publish"}
           </Button>
           <Button variant="destructive">Remove Course</Button>
@@ -92,6 +123,7 @@ const CourseTab = () => {
 
       <CardContent>
         <div className="space-y-5 mt-3">
+
           <div>
             <Label>Title</Label>
             <Input
@@ -110,22 +142,24 @@ const CourseTab = () => {
               name="subTitle"
               value={input.subTitle}
               onChange={changeEventHandler}
-              placeholder="Ex. Become a Fullstack developer from zero to hero"
+              placeholder="Ex. Become a fullstack developer"
             />
           </div>
 
           <div>
             <Label>Description</Label>
-             <RichTextEditor input={input} setInput={setInput} />
-
+            <RichTextEditor input={input} setInput={setInput} />
           </div>
 
           <div className="flex flex-wrap gap-5">
             <div>
               <Label>Category</Label>
-              <Select onValueChange={selectCategory}>
+              <Select
+                value={input.category}
+                onValueChange={selectCategory}
+              >
                 <SelectTrigger className="w-[200px]">
-                  <SelectValue placeholder="Select a category" />
+                  <SelectValue placeholder="Select category" />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectGroup>
@@ -142,10 +176,6 @@ const CourseTab = () => {
                       MERN Stack Development
                     </SelectItem>
                     <SelectItem value="Javascript">Javascript</SelectItem>
-                    <SelectItem value="Python">Python</SelectItem>
-                    <SelectItem value="Docker">Docker</SelectItem>
-                    <SelectItem value="MongoDB">MongoDB</SelectItem>
-                    <SelectItem value="HTML">HTML</SelectItem>
                   </SelectGroup>
                 </SelectContent>
               </Select>
@@ -158,7 +188,7 @@ const CourseTab = () => {
                 onValueChange={selectCourseLevel}
               >
                 <SelectTrigger className="w-[200px]">
-                  <SelectValue placeholder="Select a level" />
+                  <SelectValue placeholder="Select level" />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectGroup>
@@ -178,39 +208,42 @@ const CourseTab = () => {
                 name="coursePrice"
                 value={input.coursePrice}
                 onChange={changeEventHandler}
-                placeholder="e.g. 199"
+                placeholder="199"
                 className="w-[150px]"
               />
             </div>
           </div>
 
           <div>
-            <Label>Course Thumbnail</Label>
+            <Label>Thumbnail</Label>
             <Input
               type="file"
-              onChange={selectThumbnail}
               accept="image/*"
+              onChange={selectThumbnail}
               className="w-fit"
             />
-            {
-              previewThumbnail && (
-                <img src={previewThumbnail} className="e-64 my-2" alt="courseThumbnail"/>
-              )
-            }
+
+            {previewThumbnail && (
+              <img
+                src={previewThumbnail}
+                className="h-64 my-2 rounded-md"
+                alt="thumbnail preview"
+              />
+            )}
           </div>
 
           <div className="space-x-3">
             <Button onClick={() => navigate("/admin/course")} variant="outline">
               Cancel
             </Button>
-            <Button onClick={handleSave} disabled={isLoading}>
+            <Button onClick={updateCourseHandler} disabled={isLoading}>
               {isLoading ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  Please wait...
+                  Updating...
                 </>
               ) : (
-                "Save"
+                "Save Changes"
               )}
             </Button>
           </div>

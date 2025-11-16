@@ -46,7 +46,7 @@ const CourseTable = () => {
         <TableBody>
           {data?.courses?.map((course) => (
             <TableRow key={course._id}>
-              <TableCell className="font-medium">{course.coursePrice}</TableCell>
+              <TableCell className="font-medium">{course.coursePrice || 'NA'}</TableCell>
 
               <TableCell>
                 <Badge>{course.isPublished ? "Published" : "Draft"}</Badge>
@@ -59,7 +59,7 @@ const CourseTable = () => {
                   size="sm"
                   variant="ghost"
                   onClick={() =>
-                    navigate(`/dashboard/course/${course._id}`)
+                    navigate(`/admin/course/${course._id}`)
                   }
                 >
                   <Edit />
