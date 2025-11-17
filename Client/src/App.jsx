@@ -12,6 +12,7 @@ import Dashboard from "./pages/admin/Dashboard";
 import CourseTable from "./pages/admin/course/courseTable";
 import AddCourse from "./pages/admin/course/addCourse";
 import EditCourse from "./pages/admin/course/editCourse";
+import CreateLecture from "./pages/admin/lecture/createLecture";
 
 function App() {
   // const showLogin = false; 
@@ -48,6 +49,10 @@ function App() {
             {
               path: 'course/:courseId',
               element: <EditCourse/>
+            },
+            {
+              path: 'course/:courseId/lecture',
+              element: <CreateLecture/>
             }
           ]
         }

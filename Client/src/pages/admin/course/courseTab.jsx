@@ -32,7 +32,11 @@ const CourseTab = () => {
 
   const [isPublished, setIsPublished] = useState(true);
   const [editCourse, { isLoading, isSuccess, data, error }] = useEditCourseMutation();
-  const {data:courseData} = useCourseByIdQuery(courseId);
+const { data: courseData, refetch } = useCourseByIdQuery(courseId, {
+  refetchOnMountOrArgChange: true,
+  refetchOnFocus: true,
+});
+
 
   const [input, setInput] = useState({
     courseTitle: "",
@@ -42,6 +46,7 @@ const CourseTab = () => {
     courseLevel: "",
     coursePrice: "",
     courseThumbnail: null,
+    isPublished: false,
   });
 
   const [previewThumbnail, setPreviewThumbnail] = useState("");
@@ -60,7 +65,7 @@ const CourseTab = () => {
   const updateCourseHandler = async () => {
     const formData = new FormData();
     for (const key in input) {
-      const value = input[key];  
+      const value = input[key];
       formData.append(key, value);
     }
     await editCourse({ formData, courseId });
@@ -77,23 +82,24 @@ const CourseTab = () => {
     fileReader.readAsDataURL(file);
   };
 
-useEffect(() => {
-  if (courseData?.course) {
-    const c = courseData.course;
+  useEffect(() => {
+    if (courseData?.course) {
+      const c = courseData.course;
 
-    setInput({
-      courseTitle: c.courseTitle || "",
-      subTitle: c.subTitle || "",
-      description: c.description || "",
-      category: c.category || "",
-      courseLevel: c.courseLevel || "",
-      coursePrice: c.coursePrice || "",
-      courseThumbnail: null,
-    });
+      setInput({
+        courseTitle: c.courseTitle || "",
+        subTitle: c.subTitle || "",
+        description: c.description || "",
+        category: c.category || "",
+        courseLevel: c.courseLevel || "",
+        coursePrice: c.coursePrice || "",
+        isPublished: c.isPublished || false,
+        courseThumbnail: null,
+      });
 
-    setPreviewThumbnail(c.thumbnail); 
-  }
-}, [courseData]);
+      setPreviewThumbnail(c.thumbnail);
+    }
+  }, [courseData]);
 
 
   useEffect(() => {
@@ -114,9 +120,15 @@ useEffect(() => {
           <CardDescription>Update the course details below.</CardDescription>
         </div>
         <div className="space-x-2">
-          <Button variant="outline" onClick={() => setIsPublished(!isPublished)}>
-            {isPublished ? "Unpublish" : "Publish"}
+          <Button
+            variant="outline"
+            onClick={() =>
+              setInput((prev) => ({ ...prev, isPublished: !prev.isPublished }))
+            }
+          >
+            {input.isPublished ? "Unpublish" : "Publish"}
           </Button>
+
           <Button variant="destructive">Remove Course</Button>
         </div>
       </CardHeader>

@@ -2,7 +2,7 @@ import express from "express";
 import { isAuthenticated } from "../Middleware/isAuthenticated.js";
 // import upload from "../Utils/multer.js";
 import { createCourse, CreatorCourses, EditCourse, getCourseById } from "../Controller/courseController.js";
-import upload from "../utils/multer.js";
+import upload from "../Utils/multer.js";
 
 const router = express.Router();
 
