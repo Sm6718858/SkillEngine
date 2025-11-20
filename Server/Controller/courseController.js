@@ -1,4 +1,5 @@
 import { Course } from "../Models/courseModel.js";
+import { Lecture } from "../Models/lectureModel.js";
 import {deleteMediaFromCloudinary,uploadMedia} from '../Utils/cloudinary.js'
 
 export const createCourse = async (req, res) => {
@@ -104,5 +105,62 @@ export const getCourseById = async (req,res) =>{
             success: false,
             message: "Error from GetCourseById endpoint",
         });
+    }
+}
+
+export const createLecture = async (req,res) =>{
+    try {
+        const {courseId} = req.params;
+        const {lectureTitle} = req.body;
+        if(!lectureTitle || !courseId){
+            return res.status(404).json({
+                success:false,
+                message:"Lecture Title Required"
+            })
+        }
+        const lecture = await Lecture.create({lectureTitle,
+            // course:courseId
+        });
+        const course = await Course.findById(courseId);
+        if(course){
+            course.lectures.push(lecture._id);
+            await course.save({validateBeforeSave:false});
+
+        }
+        return res.status(201).json({
+            success:true,
+            message:"Lecture Added Successfully",
+            lecture
+
+        })
+        
+    } catch (error) {
+        return res.status(500).json({
+            success:false,
+            message:"Error from createLecture Endpoint",
+        })
+    }
+}
+
+export const getCourseLecture = async (req,res) =>{
+    try {
+        const {courseId} = req.params;
+        const course = await Course.findById(courseId).populate('lectures');
+        if(!course){
+            return res.status(404).json({
+                success:false,
+                message:"Course Not Found Babu"
+            })
+        }
+        return res.status(201).json({
+            success:true,
+            message:"Course Lectures Got Successfuly",
+            lectures:course.lectures,
+        })
+    } catch (error) {
+        res.status(500).json({
+            success:false,
+            message:"Error from getCourseLecture endpoint"
+        })
     }
 }
