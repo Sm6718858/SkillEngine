@@ -6,6 +6,8 @@ import { Loader2 } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "sonner";
+import lecture from "./lecture";
+import Lecture from "./lecture";
 
 const CreateLecture = () => {
   const [lectureTitle, setLectureTitle] = useState("");
@@ -95,15 +97,18 @@ const CreateLecture = () => {
 
         {getLectureLoading && <p>Loading...</p>}
 
-        {getLectureLoading && <p>Loading...</p>}
+        {getLectureData?.lectures?.length === 0 && (
+          <p className="text-gray-500">No Lectures Found</p>
+        )}
 
-        {getLectureData?.lectures?.length === 0 && <p>No Lectures Found</p>}
-
-        {getLectureData?.lectures?.map((e) => (
-          <ul key={e._id}>
-            <li className="mt-2">{e.lectureTitle}</li>
-          </ul>
+        {getLectureData?.lectures?.map((e, index) => (
+          <Lecture
+            courseId={courseId}
+            key={e._id}
+            title={`Lecture-${index + 1} | ${e.lectureTitle}`}
+          />
         ))}
+
       </div>
     </div>
   );

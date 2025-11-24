@@ -13,6 +13,7 @@ import CourseTable from "./pages/admin/course/courseTable";
 import AddCourse from "./pages/admin/course/addCourse";
 import EditCourse from "./pages/admin/course/editCourse";
 import CreateLecture from "./pages/admin/lecture/createLecture";
+import EditLecture from "./pages/admin/lecture/editLecture";
 
 function App() {
   // const showLogin = false; 
@@ -53,6 +54,10 @@ function App() {
             {
               path: 'course/:courseId/lecture',
               element: <CreateLecture/>
+            },
+            {
+              path: 'course/:courseId/lecture/editLecture',
+              element:<EditLecture/>
             }
           ]
         }
