@@ -22,8 +22,6 @@ const Profile = () => {
   const { data, isLoading, refetch } = useLoadUserQuery();
   const [updateUser, { isLoading: updateIsLoading }] = useUpdateUserMutation();
  
-
-
   const [name, setName] = useState("");
   const [profilePhoto, setProfilePhoto] = useState(null);
 
@@ -72,7 +70,6 @@ const Profile = () => {
     animate-fadeSlide
 ">
 
-  {/* Page Title */}
   <h1 className="
       font-extrabold text-4xl 
       text-gray-900 dark:text-white 
@@ -81,7 +78,6 @@ const Profile = () => {
     Profile
   </h1>
 
-  {/* Profile Card */}
   <div className="
       bg-white dark:bg-gray-900 
       shadow-xl rounded-3xl p-8 
@@ -91,7 +87,6 @@ const Profile = () => {
       transition-all duration-300 hover:shadow-2xl
     "
   >
-    {/* Avatar Section */}
     <div className="flex flex-col items-center md:items-start text-center md:text-left space-y-3">
       
       <div className="
@@ -113,7 +108,6 @@ const Profile = () => {
           </AvatarFallback>
         </Avatar>
 
-        {/* Floating Glow */}
         <div className="
             absolute -inset-2 rounded-full 
             bg-purple-500/20 blur-2xl opacity-0 
@@ -131,10 +125,8 @@ const Profile = () => {
       </p>
     </div>
 
-    {/* Info Section */}
     <div className="flex-1 space-y-6">
 
-      {/* User Info */}
       <div className="
           space-y-4 pb-5 
           border-b border-gray-200 dark:border-gray-700
@@ -180,7 +172,6 @@ const Profile = () => {
         </div>
       </div>
 
-      {/* Edit Button */}
       <Dialog>
         <DialogTrigger asChild>
           <Button className="
@@ -254,7 +245,6 @@ const Profile = () => {
     </div>
   </div>
 
-  {/* Enrolled Courses Section */}
   <div>
     <h2 className="font-bold text-2xl text-gray-800 dark:text-gray-200 mb-4">
       Courses You're Enrolled In

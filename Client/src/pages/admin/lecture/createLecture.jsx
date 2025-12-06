@@ -13,6 +13,7 @@ const CreateLecture = () => {
   const [lectureTitle, setLectureTitle] = useState("");
   const params = useParams();
   const courseId = params.courseId;
+  const lectureId = params.lectureId;
   const navigate = useNavigate();
 
   const [createLecture, { isLoading, error, data }] = useCreateLectureMutation();
@@ -104,6 +105,7 @@ const CreateLecture = () => {
         {getLectureData?.lectures?.map((e, index) => (
           <Lecture
             courseId={courseId}
+            lectureId={e._id}
             key={e._id}
             title={`Lecture-${index + 1} | ${e.lectureTitle}`}
           />

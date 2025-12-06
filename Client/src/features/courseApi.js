@@ -50,7 +50,15 @@ export const CourseApi = createApi({
                 method:'GET',
             }),
             providesTags:["Lecture"]
-        })
+        }),
+        editLecture:builder.mutation({
+            query:({courseId,lectureId,lectureTitle,videoInfo,isPreviewFree}) =>({
+                url:`/${courseId}/lecture/${lectureId}`,
+                method:'PUT',
+                body:{lectureTitle,videoInfo,isPreviewFree},
+            }),
+            invalidatesTags:["Lecture"]
+        }),
     })
 });
-export const {useCreateCourseMutation,useCreatorCourseQuery,useEditCourseMutation,useCourseByIdQuery , useCreateLectureMutation,useGetCourseLectureQuery } = CourseApi;
+export const {useCreateCourseMutation,useCreatorCourseQuery,useEditCourseMutation,useCourseByIdQuery , useCreateLectureMutation,useGetCourseLectureQuery,useEditLectureMutation } = CourseApi;

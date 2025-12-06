@@ -2,11 +2,13 @@ import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
 import React from "react";
 import { Link, useParams } from "react-router-dom";
-// import LectureTab from "./LectureTab";
+import LectureTab from "./LectureTab";
 
 const EditLecture = () => {
-  const params = useParams();
-  const courseId = params.courseId;
+  const { courseId, lectureId } = useParams();  // FIXED
+  console.log("Course ID:", courseId);
+  console.log("Lecture ID:", lectureId);
+
   return (
     <div>
       <div className="flex items-center justify-between mb-5 mt-5 pt-5">
@@ -19,7 +21,9 @@ const EditLecture = () => {
           <h1 className="font-bold text-xl">Update Your Lecture</h1>
         </div>
       </div>
-      {/* <LectureTab /> */}
+
+      {/* PASS BOTH IDs TO LECTURETAB */}
+      <LectureTab courseId={courseId} lectureId={lectureId} />  
     </div>
   );
 };

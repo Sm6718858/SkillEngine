@@ -2,7 +2,7 @@ import React from "react";
 import { Edit } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
-const Lecture = ({ title, courseId }) => {
+const Lecture = ({ title, courseId,lectureId }) => {
     const navigate = useNavigate();
     return (
         <div className="flex items-center justify-between bg-[#F7F9FA] dark:bg-[#1F1F1F] px-4 py-2 rounded-md my-2">
@@ -10,7 +10,7 @@ const Lecture = ({ title, courseId }) => {
                 {title}
             </h1>
             <Edit
-                onClick={() => navigate(`/admin/course/${courseId}/lecture/editLecture`)}
+                onClick={() => navigate(`/admin/course/${courseId}/lecture/${lectureId}`)}
                 size={20}
                 className="cursor-pointer text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400"
             />
