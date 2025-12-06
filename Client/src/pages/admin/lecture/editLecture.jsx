@@ -5,7 +5,7 @@ import { Link, useParams } from "react-router-dom";
 import LectureTab from "./LectureTab";
 
 const EditLecture = () => {
-  const { courseId, lectureId } = useParams();  // FIXED
+  const { courseId, lectureId } = useParams(); 
   console.log("Course ID:", courseId);
   console.log("Lecture ID:", lectureId);
 
@@ -22,7 +22,6 @@ const EditLecture = () => {
         </div>
       </div>
 
-      {/* PASS BOTH IDs TO LECTURETAB */}
       <LectureTab courseId={courseId} lectureId={lectureId} />  
     </div>
   );

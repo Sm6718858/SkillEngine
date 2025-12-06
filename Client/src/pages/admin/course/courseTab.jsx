@@ -24,7 +24,7 @@ import {
 import { Loader2 } from "lucide-react";
 import { toast } from "sonner";
 
-import { useCourseByIdQuery, useEditCourseMutation } from "@/features/courseApi";
+import { useCourseByIdQuery, useEditCourseMutation, useRemoveCourseMutation } from "@/features/courseApi";
 
 const CourseTab = () => {
   const navigate = useNavigate();
@@ -32,11 +32,27 @@ const CourseTab = () => {
 
   const [isPublished, setIsPublished] = useState(true);
   const [editCourse, { isLoading, isSuccess, data, error }] = useEditCourseMutation();
-const { data: courseData, refetch } = useCourseByIdQuery(courseId, {
-  refetchOnMountOrArgChange: true,
-  refetchOnFocus: true,
-});
+  const [removeCourse, { isLoading: isRemoving, isSuccess: isRemoved, data: removeData, error: removeError }] = useRemoveCourseMutation();
+  const { data: courseData, refetch } = useCourseByIdQuery(courseId, {
+    refetchOnMountOrArgChange: true,
+    refetchOnFocus: true,
+  });
 
+  const handleRemoveCourse = async () => {
+    if (window.confirm("Are you sure you want to remove this course?")) {
+      await removeCourse(courseId);
+    }
+  };
+
+  useEffect(() => {
+    if (isRemoved) {
+      toast.success(removeData?.message || "Course removed successfully!");
+      navigate("/admin/course");
+    }
+    if (removeError) {
+      toast.error(removeError?.data?.message || "Failed to remove course");
+    }
+  }, [isRemoved, removeError]);
 
   const [input, setInput] = useState({
     courseTitle: "",
@@ -129,7 +145,21 @@ const { data: courseData, refetch } = useCourseByIdQuery(courseId, {
             {input.isPublished ? "Unpublish" : "Publish"}
           </Button>
 
-          <Button variant="destructive">Remove Course</Button>
+          <Button variant="destructive" onClick={handleRemoveCourse}>
+            {
+              isRemoving ? (
+                <>
+                  <div className="fixed inset-0 flex items-center justify-center bg-white/40 backdrop-blur-sm z-50">
+                    <Loader2 className="h-10 w-10 animate-spin text-primary" />
+                  </div>
+
+                  Removing...
+                </>
+              ) : (
+                "Remove Course"
+              )
+            }
+          </Button>
         </div>
       </CardHeader>
 

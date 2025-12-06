@@ -58,7 +58,7 @@ function App() {
             {
               path: 'course/:courseId/lecture/:lectureId',
               element:<EditLecture/>
-            }
+            },
           ]
         }
       ]

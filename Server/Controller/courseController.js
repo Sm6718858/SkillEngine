@@ -85,6 +85,40 @@ export const EditCourse = async (req, res) => {
     }
 }
 
+export const removeCourse = async (req,res) =>{
+    try {
+        const {courseId} = req.params;
+        const course = await Course.findByIdAndDelete(courseId);    
+        if(!course){
+            return res.status(404).json({
+                success:false,
+                message:"Course Not Found"
+            })
+        }
+        //delete associated lectures
+        for(const lectureId of course.lectures){
+            const lecture = await Lecture.findByIdAndDelete(lectureId);
+            if(lecture && lecture.publicId){
+                await deleteVideoFromCloudinary(lecture.publicId);
+            }
+        }
+        //delete course thumbnail
+        if(course.courseThumbnail){
+            const publicId = course.courseThumbnail.split("/").pop().split(".")[0];
+            await deleteMediaFromCloudinary(publicId);
+        }
+        return res.status(200).json({
+            success:true,
+            message:"Course removed successfully"
+        })
+    } catch (error) {
+        return res.status(500).json({
+            success:false,
+            message:"Error from removeCourse endpoint"
+        })
+    }
+}
+
 export const getCourseById = async (req,res) =>{
     try {
         const {courseId} = req.params;
@@ -166,47 +200,50 @@ export const getCourseLecture = async (req,res) =>{
 }
 
 export const editLecture = async (req, res) => {
-    try {
-        const { lectureTitle, videoInfo, isPreviewFree } = req.body;
-        const { courseId, lectureId } = req.params;
+  try {
+    const { lectureTitle, videoInfo, isPreviewFree } = req.body;
+    const { courseId, lectureId } = req.params;
 
-        console.log("PARAMS:", req.params);
-        console.log("BODY:", req.body);
-
-        const lecture = await Lecture.findById(lectureId);
-        if (!lecture) {
-            return res.status(404).json({
-                success: false,
-                message: "Lecture Not Found"
-            });
-        }
-
-        if (lectureTitle) lecture.lectureTitle = lectureTitle;
-        if (videoInfo?.videoUrl) lecture.videoUrl = videoInfo.videoUrl;
-        if (videoInfo?.publicId) lecture.publicId = videoInfo.publicId;
-        if (isPreviewFree) lecture.isPreviewFree = isPreviewFree;
-
-        await lecture.save();
-
-        const course = await Course.findById(courseId);
-        if (course && !course.lectures.includes(lecture._id)) {
-            course.lectures.push(lecture._id);
-            await course.save();
-        }
-
-        return res.status(200).json({
-            success: true,
-            message: "Lecture updated successfully",
-            lecture
-        });
-    } catch (error) {
-        console.error("EDIT LECTURE ERROR:", error);
-        return res.status(500).json({
-            success: false,
-            message: "Error from updateLecture endpoint"
-        });
+    const lecture = await Lecture.findById(lectureId);
+    if (!lecture) {
+      return res.status(404).json({
+        success: false,
+        message: "Lecture Not Found",
+      });
     }
+
+    if (lectureTitle) lecture.lectureTitle = lectureTitle;
+    if (videoInfo) {
+      lecture.videoInfo = {
+        videoUrl: videoInfo.videoUrl,
+        publicId: videoInfo.publicId,
+      };
+    }
+    lecture.isPreviewFree = isPreviewFree;
+
+    await lecture.save();
+
+    // ensure lecture exists in course
+    const course = await Course.findById(courseId);
+    if (course && !course.lectures.includes(lecture._id)) {
+      course.lectures.push(lecture._id);
+      await course.save();
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: "Lecture updated successfully",
+      lecture,
+    });
+  } catch (error) {
+    console.error("EDIT LECTURE ERROR:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Error from updateLecture endpoint",
+    });
+  }
 };
+
 
 
 export const removeLecture = async (req,res) =>{

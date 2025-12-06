@@ -36,6 +36,13 @@ export const CourseApi = createApi({
                 method:'GET',
             })
         }),
+        removeCourse:builder.mutation({
+            query:(courseId) =>({
+                url:`/${courseId}`,
+                method:'DELETE',
+            }),
+            invalidatesTags:["Course"]  
+        }),
         createLecture:builder.mutation({
             query:({lectureTitle,courseId}) =>({
                 url:`/${courseId}/createLecture`,
@@ -59,6 +66,20 @@ export const CourseApi = createApi({
             }),
             invalidatesTags:["Lecture"]
         }),
+        removeLecture:builder.mutation({
+            query:({courseId,lectureId}) =>({
+                url:`/${courseId}/lecture/${lectureId}`,
+                method:'DELETE',
+            }),
+            invalidatesTags:["Lecture"]
+        }),
+        getLectureById:builder.query({
+            query:({courseId,lectureId}) =>({
+                url:`/${courseId}/lecture/${lectureId}`,
+                method:'GET',
+            }),
+            providesTags:["Lecture"]
+        })
     })
 });
-export const {useCreateCourseMutation,useCreatorCourseQuery,useEditCourseMutation,useCourseByIdQuery , useCreateLectureMutation,useGetCourseLectureQuery,useEditLectureMutation } = CourseApi;
+export const {useCreateCourseMutation,useCreatorCourseQuery,useEditCourseMutation,useCourseByIdQuery , useCreateLectureMutation,useGetCourseLectureQuery,useEditLectureMutation,useRemoveLectureMutation,useGetLectureByIdQuery,useRemoveCourseMutation } = CourseApi;
