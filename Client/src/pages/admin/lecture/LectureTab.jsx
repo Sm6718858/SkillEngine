@@ -104,7 +104,6 @@ const LectureTab = ({ courseId, lectureId }) => {
     if (error) toast.error("Error updating lecture")
   }, [isSuccess, error])
 
-  // Delete success
   useEffect(() => {
     if (removeSuccess) {
       toast.success("Lecture deleted successfully")

@@ -49,7 +49,7 @@ const CourseTable = () => {
               <TableCell className="font-medium">{course.coursePrice || 'NA'}</TableCell>
 
               <TableCell>
-                <Badge>{course.isPublished ? "Published" : "Draft"}</Badge>
+                <Badge>{course.isPublished ? "Published" : "Unpublished"}</Badge>
               </TableCell>
 
               <TableCell>{course.courseTitle}</TableCell>

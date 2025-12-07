@@ -142,6 +142,32 @@ export const getCourseById = async (req,res) =>{
     }
 }
 
+export const togglePublishCourse = async (req,res) =>{
+    try {
+        const {courseId} = req.params;
+        const {publish} = req.query; //true or false
+        const course = await Course.findById(courseId);
+        if(!course){
+            return res.status(404).json({
+                success:false,
+                message:"Course Not Found"
+            })
+        }
+        course.isPublished = publish === 'true';
+        await course.save();
+        return res.status(200).json({
+            success:true,
+            message:`Course ${publish === 'true' ? 'Published' : 'Unpublished'} Successfully`
+        })
+    } catch (error) {
+        return res.status(500).json({
+            success:false,  
+            message:"Error from togglePublishCourse endpoint"
+        })
+    }   
+}
+
+
 export const createLecture = async (req,res) =>{
     try {
         const {courseId} = req.params;

@@ -43,6 +43,13 @@ export const CourseApi = createApi({
             }),
             invalidatesTags:["Course"]  
         }),
+        publishCourse:builder.mutation({
+            query:({courseId,query}) =>({
+                url:`/${courseId}?publish=${query}`,
+                method:'PATCH',
+            }),
+            invalidatesTags:["Course"]  
+        }),
         createLecture:builder.mutation({
             query:({lectureTitle,courseId}) =>({
                 url:`/${courseId}/createLecture`,
@@ -82,4 +89,4 @@ export const CourseApi = createApi({
         })
     })
 });
-export const {useCreateCourseMutation,useCreatorCourseQuery,useEditCourseMutation,useCourseByIdQuery , useCreateLectureMutation,useGetCourseLectureQuery,useEditLectureMutation,useRemoveLectureMutation,useGetLectureByIdQuery,useRemoveCourseMutation } = CourseApi;
+export const {useCreateCourseMutation,useCreatorCourseQuery,useEditCourseMutation,useCourseByIdQuery , useCreateLectureMutation,useGetCourseLectureQuery,useEditLectureMutation,useRemoveLectureMutation,useGetLectureByIdQuery,useRemoveCourseMutation ,usePublishCourseMutation} = CourseApi;

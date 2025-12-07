@@ -24,7 +24,7 @@ import {
 import { Loader2 } from "lucide-react";
 import { toast } from "sonner";
 
-import { useCourseByIdQuery, useEditCourseMutation, useRemoveCourseMutation } from "@/features/courseApi";
+import { useCourseByIdQuery, useEditCourseMutation, usePublishCourseMutation, useRemoveCourseMutation } from "@/features/courseApi";
 
 const CourseTab = () => {
   const navigate = useNavigate();
@@ -98,6 +98,20 @@ const CourseTab = () => {
     fileReader.readAsDataURL(file);
   };
 
+  const [publishCourse] = usePublishCourseMutation();
+  const publishStatusHandler = async (action) => {
+    try {
+      const res = await publishCourse({courseId,query:action});
+      if(res.data.success){
+        toast.success(res?.data.message || "Course publish status updated");
+      }
+      refetch();
+      return res;
+    } catch (error) {
+      toast.error(error?.data?.message || "Failed to update publish status");
+    }
+  };
+
   useEffect(() => {
     if (courseData?.course) {
       const c = courseData.course;
@@ -139,10 +153,10 @@ const CourseTab = () => {
           <Button
             variant="outline"
             onClick={() =>
-              setInput((prev) => ({ ...prev, isPublished: !prev.isPublished }))
+              setInput(() => publishStatusHandler(courseData?.course?.isPublished ? 'false':'true'))
             }
           >
-            {input.isPublished ? "Unpublish" : "Publish"}
+            {courseData?.course?.isPublished ? "Unpublished" : "Publish"}
           </Button>
 
           <Button variant="destructive" onClick={handleRemoveCourse}>
