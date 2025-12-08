@@ -1,9 +1,12 @@
 import { Skeleton } from '@/components/ui/skeleton';
 import React from 'react';
 import Course from './Course';
+import { useGetPublishedCoursesQuery } from '@/features/courseApi';
 
 const Courses = () => {
-    const isLoading = false;
+    const { data, isLoading, isError } = useGetPublishedCoursesQuery();
+    console.log("COURSE DATA →", data);
+
 
     return (
         <div className="bg-gray-50 min-h-screen w-full flex justify-center">
@@ -23,8 +26,8 @@ const Courses = () => {
                     </div>
                 ) : (
                     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-                        {Array.from({ length:12}).map((_, index) => (
-                            <Course key={index} />
+                        {data?.courses.map((course, index) => (
+                            <Course key={index} course={course} />
                         ))}
                     </div>
 

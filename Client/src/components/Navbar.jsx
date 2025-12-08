@@ -44,13 +44,14 @@ const Navbar = () => {
         border-b border-gray-200 dark:border-gray-700
       "
     >
+      <Link to="/">
       <div className="flex items-center gap-2 cursor-pointer select-none">
         <School className="text-blue-600 dark:text-blue-400" size={28} />
         <h1 className="font-extrabold text-xl md:text-2xl text-gray-900 dark:text-white tracking-tight">
           SkillEngine
         </h1>
       </div>
-
+</Link>
       <div className="hidden md:flex items-center gap-6">
         {user ? (
           <DropdownMenu>

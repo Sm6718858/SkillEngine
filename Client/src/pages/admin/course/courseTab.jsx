@@ -151,6 +151,7 @@ const CourseTab = () => {
         </div>
         <div className="space-x-2">
           <Button
+            disabled={courseData?.course?.lectures?.length === 0}
             variant="outline"
             onClick={() =>
               setInput(() => publishStatusHandler(courseData?.course?.isPublished ? 'false':'true'))

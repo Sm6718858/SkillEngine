@@ -14,6 +14,8 @@ import AddCourse from "./pages/admin/course/addCourse";
 import EditCourse from "./pages/admin/course/editCourse";
 import CreateLecture from "./pages/admin/lecture/createLecture";
 import EditLecture from "./pages/admin/lecture/editLecture";
+import CourseDetail from "./pages/student/courseDetail";
+import CourseProgress from "./pages/student/courseProgress";
 
 function App() {
   // const showLogin = false; 
@@ -31,6 +33,8 @@ function App() {
         { path: '/login', element: <Login /> },
         {path: '/myLearning', element: <MyLearning />},
         {path: '/profile', element: <Profile />},
+        {path:'/courseDetail/:courseId', element:<CourseDetail/>},
+        {path:'/course-progress/:courseId', element:<CourseProgress/>},
 
         {
           path:"/admin",element: <Sidebar/>,

@@ -5,19 +5,17 @@ import Course from './Course';
 
 const MyLearning = () => {
     const isLoading = false;
-    const MyLearningCourses = [1,2,3,3,3,2,1];
+    const MyLearningCourses = [];
     return (
         <div className="min-h-screen bg-gray-50 my-8 py-2.5">
             <div className="max-w-7xl mx-auto px-4 py-10">
 
-                {/* Heading */}
                 <div className="text-center mb-10">
                     <h1 className="text-3xl sm:text-4xl font-bold text-gray-900">
                         My Learning
                     </h1>
                 </div>
 
-                {/* Content */}
                 {isLoading ? (
                     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
                         {Array.from({ length: 8 }).map((_, i) => (
@@ -27,7 +25,7 @@ const MyLearning = () => {
                 ) : MyLearningCourses.length > 0 ? (
                     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
                         {MyLearningCourses.map((course, index) => (
-                            <Course key={index} {...course} />
+                            <Course key={index} {...course} course={course} />
                         ))}
                     </div>
                 ) : (

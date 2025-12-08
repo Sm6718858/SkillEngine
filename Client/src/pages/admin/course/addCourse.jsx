@@ -43,7 +43,7 @@ const AddCourse = () => {
   useEffect(() => {
     if (isSuccess) {
       toast.success("Course Created Successfully");
-      navigate("/admin/course"); 
+      navigate("/admin/course");
     }
     if (error) {
       toast.error(error?.data?.message || "Error creating course");
@@ -108,6 +108,12 @@ const AddCourse = () => {
             Back
           </Button>
 
+          {isLoading && (
+            <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm">
+              <Loader2 className="h-10 w-10 animate-spin text-white" />
+            </div>
+          )}
+
           <Button disabled={isLoading} onClick={addCourse} className="px-6">
             {isLoading ? (
               <>
@@ -118,6 +124,7 @@ const AddCourse = () => {
               "Create Course"
             )}
           </Button>
+
         </div>
       </div>
     </div>
