@@ -189,7 +189,6 @@ export const togglePublishCourse = async (req,res) =>{
     }   
 }
 
-
 export const createLecture = async (req,res) =>{
     try {
         const {courseId} = req.params;
@@ -200,20 +199,17 @@ export const createLecture = async (req,res) =>{
                 message:"Lecture Title Required"
             })
         }
-        const lecture = await Lecture.create({lectureTitle,
-            // course:courseId
-        });
+        const lecture = await Lecture.create({lectureTitle});
         const course = await Course.findById(courseId);
         if(course){
             course.lectures.push(lecture._id);
-            await course.save({validateBeforeSave:false});
+            await course.save();
 
         }
         return res.status(201).json({
             success:true,
-            message:"Lecture Added Successfully",
-            lecture
-
+            lecture,
+            message:"Lecture Added Successfully"
         })
         
     } catch (error) {
@@ -261,12 +257,8 @@ export const editLecture = async (req, res) => {
     }
 
     if (lectureTitle) lecture.lectureTitle = lectureTitle;
-    if (videoInfo) {
-      lecture.videoInfo = {
-        videoUrl: videoInfo.videoUrl,
-        publicId: videoInfo.publicId,
-      };
-    }
+    if(videoInfo?.videoUrl) lecture.videoUrl = videoInfo.videoUrl;
+    if(videoInfo?.publicId) lecture.publicId = videoInfo.publicId;
     lecture.isPreviewFree = isPreviewFree;
 
     await lecture.save();
@@ -280,8 +272,8 @@ export const editLecture = async (req, res) => {
 
     return res.status(200).json({
       success: true,
-      message: "Lecture updated successfully",
       lecture,
+      message: "Lecture updated successfully",
     });
   } catch (error) {
     console.error("EDIT LECTURE ERROR:", error);
@@ -291,8 +283,6 @@ export const editLecture = async (req, res) => {
     });
   }
 };
-
-
 
 export const removeLecture = async (req,res) =>{
     try {
