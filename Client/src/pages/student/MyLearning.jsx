@@ -1,17 +1,18 @@
 import React from 'react';
 import { Skeleton } from '@/components/ui/skeleton';
 import Course from './Course';
-
+import { useLoadUserQuery } from '@/features/authApi';
 
 const MyLearning = () => {
-    const isLoading = false;
-    const MyLearningCourses = [];
+    const { data, isLoading } = useLoadUserQuery();
+    const MyLearningCourses = data?.user?.enrolledCourses ?? [];
+
     return (
-        <div className="min-h-screen bg-gray-50 my-8 py-2.5">
+        <div className="min-h-screen bg-gray-50 my-8 py-2.5 dark:bg-black dark:text-white">
             <div className="max-w-7xl mx-auto px-4 py-10">
 
                 <div className="text-center mb-10">
-                    <h1 className="text-3xl sm:text-4xl font-bold text-gray-900">
+                    <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-white">
                         My Learning
                     </h1>
                 </div>
@@ -25,7 +26,7 @@ const MyLearning = () => {
                 ) : MyLearningCourses.length > 0 ? (
                     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
                         {MyLearningCourses.map((course, index) => (
-                            <Course key={index} {...course} course={course} />
+                            <Course key={index} course={course} />
                         ))}
                     </div>
                 ) : (
@@ -48,7 +49,6 @@ const MyLearning = () => {
                 )}
             </div>
         </div>
-
     );
 }
 

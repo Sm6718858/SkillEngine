@@ -5,6 +5,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Link } from 'react-router-dom';
 
 const Course = ({course}) => {
+    if (!course?._id) return null;
     return (
         <Link to={`/courseDetail/${course._id}`}>
         <Card

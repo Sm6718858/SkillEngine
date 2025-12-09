@@ -16,6 +16,10 @@ import CreateLecture from "./pages/admin/lecture/createLecture";
 import EditLecture from "./pages/admin/lecture/editLecture";
 import CourseDetail from "./pages/student/courseDetail";
 import CourseProgress from "./pages/student/courseProgress";
+import SearchPage from "./pages/student/searchPage";
+import { AdminRoute, AuthenticatedUser, ProtectedRoute } from "./components/protectedRoute";
+import PurchaseCourseProtectedRoute from "./components/purchaseCourseProtectedRoute";
+import { ThemeProvider } from "./components/themeProvider";
 
 function App() {
   // const showLogin = false; 
@@ -27,41 +31,70 @@ function App() {
         {
           path: '/', element: <>
             <HeroSection />
-            <Courses/>
+            <Courses />
           </>
         },
-        { path: '/login', element: <Login /> },
-        {path: '/myLearning', element: <MyLearning />},
-        {path: '/profile', element: <Profile />},
-        {path:'/courseDetail/:courseId', element:<CourseDetail/>},
-        {path:'/course-progress/:courseId', element:<CourseProgress/>},
+        {
+          path: '/login', element: <AuthenticatedUser>
+            <Login />
+          </AuthenticatedUser>
+        },
+        {
+          path: '/myLearning', element: <ProtectedRoute>
+            <MyLearning />
+          </ProtectedRoute>
+        },
+        {
+          path: '/profile', element: <ProtectedRoute>
+            <Profile />
+          </ProtectedRoute>
+        },
+        {
+          path: '/course/search', element: <ProtectedRoute>
+            <SearchPage />
+          </ProtectedRoute>
+        },
+        {
+          path: '/courseDetail/:courseId', element: <ProtectedRoute>
+            <CourseDetail />
+          </ProtectedRoute>
+        },
+        {
+          path: '/course-progress/:courseId', element: <ProtectedRoute>
+            <PurchaseCourseProtectedRoute>
+              <CourseProgress />
+            </PurchaseCourseProtectedRoute>
+          </ProtectedRoute>
+        },
 
         {
-          path:"/admin",element: <Sidebar/>,
-          children:[
+          path: "/admin", element: <AdminRoute>
+            <Sidebar />
+          </AdminRoute>,
+          children: [
             {
               path: 'dashboard',
-              element: <Dashboard/>
+              element: <Dashboard />
             },
             {
               path: 'course',
-              element: <CourseTable/>
+              element: <CourseTable />
             },
             {
               path: 'course/create',
-              element: <AddCourse/>
+              element: <AddCourse />
             },
             {
               path: 'course/:courseId',
-              element: <EditCourse/>
+              element: <EditCourse />
             },
             {
               path: 'course/:courseId/lecture',
-              element: <CreateLecture/>
+              element: <CreateLecture />
             },
             {
               path: 'course/:courseId/lecture/:lectureId',
-              element:<EditLecture/>
+              element: <EditLecture />
             },
           ]
         }
@@ -70,7 +103,9 @@ function App() {
   ])
   return (
     <>
-      <RouterProvider router={appRouter} />
+      <ThemeProvider>
+        <RouterProvider router={appRouter} />
+      </ThemeProvider>
     </>
   );
 }

@@ -6,69 +6,68 @@ const USER_API = `${import.meta.env.VITE_API_BASE_URL}/api/user/`;
 
 export const authApi = createApi({
     reducerPath: 'authApi',
-    baseQuery: fetchBaseQuery({ baseUrl: USER_API,credentials: 'include'}),
+    baseQuery: fetchBaseQuery({ baseUrl: USER_API, credentials: 'include' }),
+    tagTypes: ["User"],
+
     endpoints: (builder) => ({
-        //jab fetch karna ho to Query use karenge 
-        //jab data post,update,delete karna ho to Mutation use karenge
+        
         registerUser: builder.mutation({
             query: (userInput) => ({
                 url: 'signUp',
                 method: 'POST',
                 body: userInput,
             }),
+            invalidatesTags: ["User"]
         }),
+
         loginUser: builder.mutation({
             query: (userInput) => ({    
                 url: 'login',
                 method: 'POST',
                 body: userInput,
             }),
+            invalidatesTags: ["User"], 
             async onQueryStarted(arg, { dispatch, queryFulfilled }) {
                 try {
-                    const { data } = await queryFulfilled; //queryFulfilled it will give complete user data
+                    const { data } = await queryFulfilled;
                     dispatch(userLoggedIn({ user: data.user }));
-                } catch (error) {
-                    console.error('Login failed:', error);
-                }
+                } catch (error) {}
             },
         }),
+
         logoutUser: builder.mutation({
-            query:() =>({
+            query: () => ({
                 url: 'logout',
                 method: 'GET',
             }),
-            async onQueryStarted(arg, { dispatch, queryFulfilled }) {
-                try {
-                    dispatch(userLoggedOut());
-                } catch (error) {
-                    console.error('Login failed:', error);
-                }
+            invalidatesTags: ["User"],
+            async onQueryStarted(arg, { dispatch }) {
+                dispatch(userLoggedOut());
             },
         }),
 
         loadUser: builder.query({
-            query: () => ({
-                url: 'profile',
-                method: 'GET',
-            }),
+            query: () => ({ url: 'profile', method: 'GET' }),
+            providesTags: ["User"],
             async onQueryStarted(arg, { dispatch, queryFulfilled }) {
                 try {
-                    const { data } = await queryFulfilled; //queryFulfilled it will give complete user data
+                    const { data } = await queryFulfilled;
                     dispatch(userLoggedIn({ user: data.user }));
-                } catch (error) {
-                    console.error('Login failed:', error);
-                }
+                } catch (error) {}
             },
         }),
+
         updateUser: builder.mutation({
             query: (formData) => ({
                 url:"profile/update",
                 method:"PUT",
                 body:formData,
                 credentials:"include"
-            })
+            }),
+            invalidatesTags: ["User"]
         })
-  }),
+    }),
 });
+
 
 export const { useRegisterUserMutation, useLoginUserMutation,useLoadUserQuery ,useUpdateUserMutation , useLogoutUserMutation} = authApi;

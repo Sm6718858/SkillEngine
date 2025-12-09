@@ -251,32 +251,34 @@ const Profile = () => {
     </h2>
 
     {user?.enrolledCourses?.length ? (
-      <div className="
-          grid grid-cols-1 sm:grid-cols-2 
-          md:grid-cols-3 lg:grid-cols-4 
-          gap-6 mt-6 animate-fadeIn
-        "
-      >
-        {user.enrolledCourses.map((course) => (
-          <Course key={course._id} {...course} />
-        ))}
-      </div>
-    ) : (
-      <p className="
-          text-center text-gray-600 dark:text-gray-400 
-          font-medium text-lg py-10 animate-fadeIn
-        "
-      >
-        You haven't enrolled in any course yet 📚 <br />
-        <Button className="
-            mt-5 bg-purple-600 hover:bg-purple-700 
-            text-white rounded-lg px-6 py-2 
-            hover:shadow-lg hover:scale-[1.03]
-          ">
-          Explore Courses →
-        </Button>
-      </p>
-    )}
+  <div className="
+      grid grid-cols-1 sm:grid-cols-2 
+      md:grid-cols-3 lg:grid-cols-4 
+      gap-6 mt-6 animate-fadeIn
+    "
+  >
+    {user.enrolledCourses.map((course, index) => (
+      <Course key={index} course={course} />
+    ))}
+  </div>
+) : (
+  <p className="
+      text-center text-gray-600 dark:text-gray-400 
+      font-medium text-lg py-10 animate-fadeIn
+    "
+  >
+    You haven't enrolled in any course yet 📚 <br />
+    <Button className="
+        mt-5 bg-purple-600 hover:bg-purple-700 
+        text-white rounded-lg px-6 py-2 
+        hover:shadow-lg hover:scale-[1.03]
+      "
+    >
+      Explore Courses →
+    </Button>
+  </p>
+)}
+
   </div>
 </div>
 

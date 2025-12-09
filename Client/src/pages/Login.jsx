@@ -1,8 +1,6 @@
 import { AppWindowIcon, CodeIcon, Loader2, Mail } from "lucide-react"
 import { useState, useEffect } from "react"
 import { toast } from "sonner"
-
-
 import { Button } from "@/components/ui/button"
 import {
     Card,
@@ -64,6 +62,7 @@ export function Login() {
     useEffect(() => {
         if (data?.message) {
             toast.success(data?.message || "Signup Successful");
+            refetch();
         }
         if (sData?.message) {
             toast.success(sData?.message || "Login Successful");

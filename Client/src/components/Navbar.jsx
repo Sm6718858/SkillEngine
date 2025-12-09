@@ -81,7 +81,7 @@ const Navbar = () => {
               <DropdownMenuSeparator />
 
               {user.role === "instructor" && (
-                <DropdownMenuItem>Dashboard</DropdownMenuItem>
+                <DropdownMenuItem><Link to="/admin/dashboard">Dashboard</Link></DropdownMenuItem>
               )}
             </DropdownMenuContent>
           </DropdownMenu>
@@ -122,6 +122,15 @@ export default Navbar;
 
 /* ---------------- MOBILE MENU ---------------- */
 
+import {
+  Menu,
+  BookOpen,
+  User,
+  LogOut,
+  LayoutDashboard,
+  X
+} from "lucide-react";
+
 const MobileNav = ({ user }) => {
   const [logoutUser, { isSuccess }] = useLogoutUserMutation();
   const navigate = useNavigate();
@@ -143,55 +152,74 @@ const MobileNav = ({ user }) => {
         <Button
           size="icon"
           className="
-            rounded-full bg-gray-100 dark:bg-gray-800 
-            text-gray-900 dark:text-white
-            border border-gray-300 dark:border-gray-600
-            shadow-md hover:shadow-lg
-            transition-all duration-300 active:scale-95
+            rounded-full bg-white text-black dark:bg-gray-800 dark:text-white
+            shadow-md border border-gray-200 dark:border-gray-700
+            hover:scale-105  hover:bg-amber-50 transition-all
           "
         >
-          ☰
+          <Menu className="h-6 w-6" />
         </Button>
       </SheetTrigger>
 
-      <SheetContent side="right" className="p-6 dark:bg-gray-900">
-        <SheetHeader className="text-center mb-6">
+      <SheetContent
+        side="right"
+        className="
+          p-6 backdrop-blur-xl
+          bg-white/70 dark:bg-gray-900/70
+          border-l border-gray-200 dark:border-gray-700
+          animate-in slide-in-from-right duration-300
+        "
+      >
+
+        <SheetHeader className="text-center mb-6 mt-6">
           <h1 className="text-3xl font-extrabold text-blue-600 dark:text-blue-400">
             SkillEngine
           </h1>
         </SheetHeader>
 
-        <nav className="flex flex-col gap-5 text-lg">
+        <nav className="flex flex-col gap-6 text-lg font-medium">
           {user ? (
             <>
-              <span className="font-semibold text-gray-700 dark:text-gray-300">
-                👋 Welcome, {user.name || "User"}
-              </span>
+              <div className="text-gray-700 dark:text-gray-300 text-base">
+                👋 Welcome, <span className="font-semibold">{user?.name || "User"}</span>
+              </div>
 
-              <Link to="/myLearning" className="hover:text-blue-600 dark:hover:text-blue-400">
-                My Learning
+              <Link
+                to="/myLearning"
+                className="flex items-center gap-3 hover:text-blue-600 dark:hover:text-blue-400"
+              >
+                <BookOpen size={20} /> My Learning
               </Link>
 
-              <Link to="/profile" className="hover:text-blue-600 dark:hover:text-blue-400">
-                Edit Profile
+              <Link
+                to="/profile"
+                className="flex items-center gap-3 hover:text-blue-600 dark:hover:text-blue-400"
+              >
+                <User size={20} /> Edit Profile
               </Link>
+
+              {user.role === "instructor" && (
+                <Link
+                  to="/admin/dashboard"
+                  className="flex items-center gap-3 hover:text-blue-600 dark:hover:text-blue-400"
+                >
+                  <LayoutDashboard size={20} /> Dashboard
+                </Link>
+              )}
 
               <Button
                 onClick={handleLogout}
-                variant="outline"
-                className="
-                  w-full border-red-500 text-red-600
-                  hover:bg-red-600 hover:text-white
-                "
+                variant="destructive"
+                className="w-full flex items-center justify-center gap-2"
               >
-                Logout
+                <LogOut size={18} /> Logout
               </Button>
             </>
           ) : (
             <>
               <Button
                 onClick={() => navigate("/login")}
-                className="bg-blue-600 text-white w-full hover:bg-blue-700"
+                className="bg-blue-600 text-white w-full text-base hover:bg-blue-700"
               >
                 Login
               </Button>
@@ -201,7 +229,7 @@ const MobileNav = ({ user }) => {
                 variant="outline"
                 className="
                   w-full border-blue-600 text-blue-600
-                  hover:bg-blue-600 hover:text-white
+                  hover:bg-blue-600 hover:text-white text-base
                 "
               >
                 Signup
@@ -210,7 +238,10 @@ const MobileNav = ({ user }) => {
           )}
 
           <SheetClose asChild>
-            <Button variant="ghost" className="w-full mt-4 text-gray-500 dark:text-gray-400">
+            <Button
+              variant="ghost"
+              className="w-full mt-2 text-gray-500 dark:text-gray-400 hover:text-gray-700"
+            >
               Close Menu
             </Button>
           </SheetClose>
@@ -219,3 +250,4 @@ const MobileNav = ({ user }) => {
     </Sheet>
   );
 };
+

@@ -2,7 +2,7 @@ import Stripe from "stripe";
 import { Course } from "../Models/courseModel.js";
 import { CoursePurchase } from "../Models/purchaseCourse.js";
 import { Lecture } from "../Models/lectureModel.js";
-import {User} from "../Models/userModel.js"
+import { User } from "../Models/userModel.js"
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
@@ -33,14 +33,15 @@ export const createCheckoutSession = async (req, res) => {
               name: course.courseTitle,
               images: [course.courseThumbnail],
             },
-            unit_amount: course.coursePrice * 100, // Amount in paise (lowest denomination)
+            unit_amount: course.coursePrice * 100,
           },
           quantity: 1,
         },
       ],
       mode: "payment",
-      success_url: `http://localhost:5173/course-progress/${courseId}`, // once payment successful redirect to course progress page
-      cancel_url: `http://localhost:5173/course-detail/${courseId}`,
+      success_url: `${process.env.FRONTEND_URL}/course-progress/${courseId}`,
+      cancel_url: `${process.env.FRONTEND_URL}/course-detail/${courseId}`,
+
       metadata: {
         courseId: courseId,
         userId: userId,
