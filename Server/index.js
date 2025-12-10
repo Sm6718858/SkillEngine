@@ -15,7 +15,8 @@ connectDB();
 const app = express();
 app.use(express.json());
 app.use(cors({
-  origin:[process.env.FRONTEND_URL],
+  origin:["https://skill-engine.vercel.app/",
+  "http://localhost:5173"],
   methods:['GET','POST','PUT','DELETE','PATCH'],
   credentials:true
 }));
