@@ -15,7 +15,7 @@ connectDB();
 const app = express();
 app.use(express.json());
 app.use(cors({
-  origin:["https://vercel.com/shivam-mishras-projects-3beda321/skill-engine/FtMtqzqF7K4KmdfopcumYWHChM1K",
+  origin:["https://skill-engine.vercel.app/",
   "http://localhost:5173"],
   methods:['GET','POST','PUT','DELETE','PATCH'],
   credentials:true
