@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import Filter from "./filter";
-import SearchResult from "./SearchResult";
+import SearchResult from "./searchResult.jsx";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Link, useSearchParams } from "react-router-dom";
 import { AlertCircle } from "lucide-react";
