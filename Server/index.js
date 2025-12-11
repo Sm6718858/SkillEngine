@@ -15,12 +15,14 @@ connectDB();
 const app = express();
 app.use(express.json());
 app.use(cors({
-  "https://skill-engine.vercel.app",
-  origin:[
-  "http://localhost:5173"],
-  methods:['GET','POST','PUT','DELETE','PATCH'],
-  credentials:true
+  origin: [
+    "https://skill-engine.vercel.app",
+    "http://localhost:5173"
+  ],
+  methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
+  credentials: true
 }));
+
 app.use(cookieParser());
 
 app.use('/api/media',mediaRoute);
