@@ -28,10 +28,28 @@ const userSchema = new mongoose.Schema({
     photoUrl:{
         type:String,
         default:'',
-    }
+    },
+
+    quizResults: [
+        {
+            date: { type: Date, default: Date.now },
+
+            modules: {
+                gk: { type: Number, default: 0 },
+                english: { type: Number, default: 0 },
+                maths: { type: Number, default: 0 },
+                aptitude: { type: Number, default: 0 }
+            },
+
+            totalCorrect: Number,
+            totalQuestions: Number,
+            notAttempted: Number
+        }
+    ]
+
 },
 {
     timestamps:true,    
-})
+});
 
 export const User = mongoose.model('User',userSchema);

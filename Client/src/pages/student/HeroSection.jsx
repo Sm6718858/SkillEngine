@@ -8,53 +8,111 @@ const HeroSection = () => {
 
   const searchHandler = (e) => {
     e.preventDefault();
-
     if (searchQuery.trim() !== "") {
       navigate(`/course/search?query=${searchQuery}`);
     }
     setSearchQuery("");
-
-    console.log("Searching for:", searchQuery);
   };
 
   return (
-    <section className="pt-12">
-      <div className="relative bg-gradient-to-br from-gray-900 via-gray-800 to-gray-700 py-16 md:py-20 px-6 text-center rounded-b-3xl">
-        <div className="absolute inset-0 bg-white/5 backdrop-blur-2xl w-52 h-52 top-8 left-8 rounded-full opacity-20 animate-pulse hidden md:block"></div>
+    <section className="pt-14">
+      <div
+        className="
+        relative overflow-hidden 
+        bg-gradient-to-br 
+        from-pink-200 via-rose-100 to-purple-200 
+        dark:from-[#1b0e16] dark:via-[#2a1425] dark:to-[#1a0e1f]
+        rounded-b-[40px] px-6 py-24 text-center 
+        transition-colors duration-300
+        "
+      >
+        <div className="absolute -top-10 left-0 w-72 h-72 
+        bg-pink-300/40 dark:bg-pink-500/25 
+        blur-[120px] rounded-full animate-pulse"></div>
 
-        <h1 className="text-white text-3xl md:text-5xl font-extrabold leading-snug drop-shadow-sm">
-          Learn. Grow. Transform Your Career.
+        <div className="absolute bottom-0 right-0 w-72 h-72 
+        bg-purple-300/40 dark:bg-purple-500/25 
+        blur-[120px] rounded-full animate-pulse"></div>
+
+        <h1
+          className="
+          relative text-4xl md:text-6xl font-extrabold 
+          text-gray-900 dark:text-pink-200 
+          leading-tight tracking-tight drop-shadow-sm
+          "
+        >
+          Engine On. Doubts Off.
         </h1>
-
-        <p className="text-gray-200 text-base md:text-lg max-w-2xl mx-auto mt-3 opacity-90">
-          Upgrade your skills with professional, industry-ready courses designed to help you succeed.
+        <p
+          className="
+          relative max-w-2xl mx-auto mt-4 
+          text-gray-700 dark:text-pink-100/80
+          text-base md:text-lg opacity-95
+          "
+        >
+          Start Your Skill Engine — Your Road to Industry Starts Here
         </p>
 
-        <div className="flex items-center justify-center mt-6">
+        <div className="mt-8 flex justify-center">
           <form
             onSubmit={searchHandler}
-            className="flex w-full max-w-lg shadow-lg rounded-xl overflow-hidden bg-gray-100"
+            className="
+            flex w-full max-w-xl 
+            bg-white/70 dark:bg-white/10 
+            border border-white/40 dark:border-pink-500/20
+            backdrop-blur-xl shadow-xl 
+            rounded-2xl overflow-hidden 
+            transition
+            "
           >
             <input
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search courses e.g. Web Dev, AI, DSA..."
-              className="flex-1 px-4 py-2 text-gray-700 focus:outline-none bg-gray-100"
+              className="
+              flex-1 px-5 py-3 
+              text-gray-700 dark:text-pink-100 
+              bg-transparent 
+              placeholder-gray-500 dark:placeholder-pink-200/50
+              focus:outline-none
+              "
             />
 
             <button
               type="submit"
-              className="px-5 flex items-center gap-2 bg-gray-900 text-white font-medium hover:bg-gray-800 transition cursor-pointer"
+              className="
+              px-6 flex items-center gap-2 font-semibold
+              bg-gradient-to-r from-pink-500 to-purple-500 
+              hover:opacity-90 text-white 
+              dark:from-pink-600 dark:to-purple-600 
+              transition
+              "
             >
               <Search size={18} /> Search
             </button>
           </form>
         </div>
 
-        <div className="mt-8 flex justify-center gap-3">
-          <button onClick={()=> navigate(`/course/search?query`)} className="bg-white text-gray-900 font-semibold px-5 py-2.5 rounded-lg shadow hover:shadow-md hover:bg-gray-200 transition flex items-center gap-2 cursor-pointer">
-            Explore Courses <ArrowRight size={17} />
+        <div className="mt-8 flex justify-center">
+          <button
+            onClick={() => navigate(`/course/search?query`)}
+            className="
+            group 
+            bg-white dark:bg-white/10 
+            text-gray-900 dark:text-pink-200 
+            font-semibold px-6 py-3 rounded-xl 
+            shadow-lg hover:shadow-2xl 
+            border border-gray-200 dark:border-pink-300/20 
+            backdrop-blur-xl
+            transition flex items-center gap-2
+            "
+          >
+            Unlock Your Engine
+            <ArrowRight
+              size={18}
+              className="group-hover:translate-x-1 transition"
+            />
           </button>
         </div>
       </div>

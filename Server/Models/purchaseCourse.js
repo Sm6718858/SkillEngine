@@ -3,16 +3,16 @@ const coursePurchaseSchema = new mongoose.Schema({
     courseId:{
         type:mongoose.Schema.Types.ObjectId,
         ref:'Course',
-        required:true
+        d:true
     },
     userId:{
         type:mongoose.Schema.Types.ObjectId,
         ref:'User',
-        required:true
+        d:true
     },
     amount:{
         type:Number,
-        required:true
+        d:true
     },
     status:{
         type:String,
@@ -21,7 +21,7 @@ const coursePurchaseSchema = new mongoose.Schema({
     },
     paymentId:{
         type:String,
-        required:true
+        d:true
     }
 
 },{timestamps:true});

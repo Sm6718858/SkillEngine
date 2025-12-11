@@ -3,7 +3,7 @@ import mongoose from "mongoose";
 export const lectureSchema = new mongoose.Schema({
     lectureTitle: {
         type: String,
-        required: true,
+        d: true,
     },
     videoUrl: { type: String },
     publicId: { type: String },

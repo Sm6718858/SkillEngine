@@ -8,7 +8,7 @@ export const signUp = async (req, res) => {
     try {
         const { name, email, password } = req.body;
         if (!name || !email || !password) {
-            return res.status(400).json({ success: false, message: "All fields are required" });
+            return res.status(400).json({ success: false, message: "All fields are d" });
         }
 
         const checkUser = await User.findOne({ email });
@@ -31,7 +31,7 @@ export const login = async (req, res) => {
     try {
         const { email, password } = req.body;
         if (!email || !password) {
-            return res.status(400).json({ success: false, message: "All fields are required" });
+            return res.status(400).json({ success: false, message: "All fields are d" });
         }
         const user = await User.findOne({ email });
         if (!user) {
@@ -51,12 +51,25 @@ export const login = async (req, res) => {
 
 export const Logout = (req, res) => {
     try {
-        return res.cookie("token", "", { expires: new Date(0) }).json({ success: true, message: "Logged out successfully" });
+        res.clearCookie("token", {
+            httpOnly: true,
+            secure: true,     
+            sameSite: "none",  
+        });
+
+        return res.status(200).json({
+            success: true,
+            message: "Logged out successfully"
+        });
     } catch (error) {
         console.log("Error in Logout:", error);
-        return res.status(500).json({ success: false, message: "Internal Server Error in Logout" });
+        return res.status(500).json({
+            success: false,
+            message: "Internal Server Error in Logout"
+        });
     }
-}
+};
+
 
 export const getUserProfile = async (req, res) => {
     try {
@@ -132,3 +145,34 @@ export const updateProfile = async (req, res) => {
   }
 };
 
+
+export const saveQuizResult = async (req, res) => {
+  try {
+    const userId = req.id;  
+
+    const { modules, totalCorrect, totalQuestions, notAttempted } = req.body;
+
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ success: false, message: "User not found" });
+    }
+
+    user.quizResults.push({
+      modules,
+      totalCorrect,
+      totalQuestions,
+      notAttempted,
+      date: Date.now()
+    });
+
+    await user.save();
+
+    return res.status(200).json({
+      success: true,
+      message: "Quiz result saved successfully",
+    });
+  } catch (error) {
+    console.log("Error saving quiz result:", error);
+    return res.status(500).json({ success: false, message: "Internal Server Error" });
+  }
+};

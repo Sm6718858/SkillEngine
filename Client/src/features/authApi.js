@@ -1,7 +1,6 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 import { userLoggedIn, userLoggedOut } from './authSlice';
 
-
 const USER_API = `${import.meta.env.VITE_API_BASE_URL}/api/user/`;
 
 export const authApi = createApi({
@@ -10,7 +9,7 @@ export const authApi = createApi({
     tagTypes: ["User"],
 
     endpoints: (builder) => ({
-        
+
         registerUser: builder.mutation({
             query: (userInput) => ({
                 url: 'signUp',
@@ -21,17 +20,18 @@ export const authApi = createApi({
         }),
 
         loginUser: builder.mutation({
-            query: (userInput) => ({    
+            query: (userInput) => ({
                 url: 'login',
                 method: 'POST',
                 body: userInput,
+                 credentials: 'include',
             }),
-            invalidatesTags: ["User"], 
+            invalidatesTags: ["User"],
             async onQueryStarted(arg, { dispatch, queryFulfilled }) {
                 try {
                     const { data } = await queryFulfilled;
                     dispatch(userLoggedIn({ user: data.user }));
-                } catch (error) {}
+                } catch (error) { }
             },
         }),
 
@@ -39,6 +39,7 @@ export const authApi = createApi({
             query: () => ({
                 url: 'logout',
                 method: 'GET',
+                credentials: "include",
             }),
             invalidatesTags: ["User"],
             async onQueryStarted(arg, { dispatch }) {
@@ -53,21 +54,30 @@ export const authApi = createApi({
                 try {
                     const { data } = await queryFulfilled;
                     dispatch(userLoggedIn({ user: data.user }));
-                } catch (error) {}
+                } catch (error) { }
             },
         }),
 
         updateUser: builder.mutation({
             query: (formData) => ({
-                url:"profile/update",
-                method:"PUT",
-                body:formData,
-                credentials:"include"
+                url: "profile/update",
+                method: "PUT",
+                body: formData,
+                credentials: "include"
             }),
             invalidatesTags: ["User"]
-        })
+        }),
+        
+        saveQuizResult: builder.mutation({
+            query: (data) => ({
+                url: "quiz/save-result",
+                method: "POST",
+                body: data,
+                credentials: "include",
+            }),
+        }),
     }),
 });
 
 
-export const { useRegisterUserMutation, useLoginUserMutation,useLoadUserQuery ,useUpdateUserMutation , useLogoutUserMutation} = authApi;
+export const { useRegisterUserMutation, useLoginUserMutation, useLoadUserQuery, useUpdateUserMutation, useLogoutUserMutation, useSaveQuizResultMutation } = authApi;

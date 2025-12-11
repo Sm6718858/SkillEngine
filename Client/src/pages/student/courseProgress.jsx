@@ -8,7 +8,12 @@ import {
   useUpdateLectureProgressMutation,
 } from "@/features/courseProgressApi";
 
-import { CheckCircle, CheckCircle2, CirclePlay } from "lucide-react";
+import {
+  CheckCircle,
+  CheckCircle2,
+  CirclePlay,
+} from "lucide-react";
+
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { toast } from "sonner";
@@ -20,7 +25,6 @@ const CourseProgress = () => {
     useGetCourseProgressQuery(courseId);
 
   const [updateLectureProgress] = useUpdateLectureProgressMutation();
-
   const [completeCourse, { data: markCompleteData, isSuccess: completedSuccess }] =
     useCompleteCourseMutation();
 
@@ -30,7 +34,7 @@ const CourseProgress = () => {
   ] = useInCompleteCourseMutation();
 
   const [currentLecture, setCurrentLecture] = useState(null);
-  const [viewedLectures, setViewedLectures] = useState({}); 
+  const [viewedLectures, setViewedLectures] = useState({});
 
   useEffect(() => {
     if (completedSuccess && markCompleteData) {
@@ -41,68 +45,69 @@ const CourseProgress = () => {
       refetch();
       toast.success(markInCompleteData.message);
     }
-  }, [
-    completedSuccess,
-    inCompletedSuccess,
-    markCompleteData,
-    markInCompleteData,
-    refetch,
-  ]);
+  }, [completedSuccess, inCompletedSuccess]);
 
-  if (isLoading) return <p>Loading...</p>;
-  if (isError) return <p>Failed to load course details</p>;
+  if (isLoading) return <p className="p-6 text-pink-600">Loading...</p>;
+  if (isError) return <p className="p-6 text-red-500">Failed to load course</p>;
 
   const { courseDetails, progress, completed } = data.data;
   const { courseTitle } = courseDetails;
 
-  const initialLecture =
-    currentLecture || courseDetails?.lectures?.[0] || null;
-
-  if (!initialLecture) {
-    return (
-      <div className="p-6 text-center text-lg">
-        No lectures available for this course.
-      </div>
-    );
-  }
+  const initialLecture = currentLecture || courseDetails?.lectures?.[0];
 
   const isLectureCompleted = (lectureId) =>
     progress.some((p) => p.lectureId === lectureId && p.viewed);
 
   const handleVideoPlay = async (lectureId) => {
     if (viewedLectures[lectureId]) return;
+
     await updateLectureProgress({ courseId, lectureId });
     refetch();
-
     setViewedLectures((prev) => ({ ...prev, [lectureId]: true }));
   };
 
-  const handleSelectLecture = (lecture) => {
-    setCurrentLecture(lecture);
-  };
+  const handleSelectLecture = (lec) => setCurrentLecture(lec);
 
-  const handleCompleteCourse = async () => {
-    await completeCourse(courseId);
-  };
-
-  const handleInCompleteCourse = async () => {
+  const handleCompleteCourse = async () => await completeCourse(courseId);
+  const handleInCompleteCourse = async () =>
     await inCompleteCourse(courseId);
-  };
 
   const activeLecture = currentLecture || initialLecture;
 
   return (
-    <div className="max-w-7xl mx-auto p-4 mt-9 pt-10">
-      <div className="flex justify-between mb-4">
-        <h1 className="text-2xl font-bold">{courseTitle}</h1>
+    <div
+      className="
+        max-w-7xl mx-auto p-6 mt-10 pt-10
+        bg-gradient-to-br from-pink-50 via-rose-50 to-purple-50
+        dark:from-[#150812] dark:via-[#1a0b16] dark:to-[#10060f]
+        rounded-2xl shadow-inner
+      "
+    >
+      {/* HEADER */}
+      <div className="flex justify-between mb-6">
+        <h1
+          className="
+            text-3xl font-extrabold
+            bg-gradient-to-r from-pink-600 to-purple-600
+            bg-clip-text text-transparent
+          "
+        >
+          {courseTitle}
+        </h1>
 
         <Button
           onClick={completed ? handleInCompleteCourse : handleCompleteCourse}
           variant={completed ? "outline" : "default"}
+          className="
+            rounded-xl px-4 py-2
+            border-pink-400 dark:border-pink-700
+            text-pink-600 dark:text-pink-300
+            hover:bg-pink-100 dark:hover:bg-pink-900/30
+          "
         >
           {completed ? (
-            <div className="flex items-center">
-              <CheckCircle className="h-4 w-4 mr-2" /> <span>Completed</span>
+            <div className="flex items-center gap-2">
+              <CheckCircle className="h-4 w-4" /> Completed
             </div>
           ) : (
             "Mark as completed"
@@ -111,57 +116,89 @@ const CourseProgress = () => {
       </div>
 
       <div className="flex flex-col md:flex-row gap-6">
-        <div className="flex-1 md:w-3/5 h-fit rounded-lg shadow-lg p-4">
+        
+        <div
+          className="
+            flex-1 md:w-3/5 
+            bg-white/70 dark:bg-white/10
+            backdrop-blur-xl
+            rounded-2xl p-4 shadow-xl
+            border border-pink-300/40 dark:border-pink-700/40
+          "
+        >
           <video
-            src={activeLecture?.videoUrl || ""}
+            src={activeLecture?.videoUrl}
             controls
-            className="w-full h-auto md:rounded-lg"
             onPlay={() => handleVideoPlay(activeLecture._id)}
+            className="w-full rounded-xl shadow-lg"
           />
 
-          <div className="mt-2">
-            <h3 className="font-medium text-lg">
-              {`Lecture ${
-                courseDetails.lectures.findIndex(
-                  (lec) => lec._id === activeLecture._id
-                ) + 1
-              } : ${activeLecture.lectureTitle}`}
-            </h3>
-          </div>
+          <h3
+            className="
+              mt-4 text-xl font-semibold
+              text-gray-800 dark:text-pink-200
+            "
+          >
+            Lecture {courseDetails.lectures.findIndex(l => l._id === activeLecture._id) + 1} —{" "}
+            {activeLecture.lectureTitle}
+          </h3>
         </div>
 
-        <div className="flex flex-col w-full md:w-2/5 border-t md:border-t-0 md:border-l border-gray-200 md:pl-4 pt-4 md:pt-0">
-          <h2 className="font-semibold text-xl mb-4">Course Lecture</h2>
+        <div
+          className="
+            w-full md:w-2/5 
+            bg-white/70 dark:bg-white/10 
+            rounded-2xl shadow-xl p-5
+            border border-pink-300/40 dark:border-pink-700/40
+            backdrop-blur-xl
+          "
+        >
+          <h2
+            className="
+              font-bold text-2xl mb-4
+              bg-gradient-to-r from-pink-600 to-purple-600
+              bg-clip-text text-transparent
+            "
+          >
+            Lectures
+          </h2>
 
-          <div className="flex-1 overflow-y-auto">
-            {courseDetails?.lectures?.map((lecture) => (
+          <div className="max-h-[65vh] overflow-y-auto space-y-3 pr-2">
+            {courseDetails?.lectures?.map((lec) => (
               <Card
-                key={lecture._id}
-                className={`mb-3 hover:cursor-pointer transition ${
-                  lecture._id === activeLecture._id
-                    ? "bg-gray-200 dark:bg-gray-800"
-                    : ""
-                }`}
-                onClick={() => handleSelectLecture(lecture)}
+                key={lec._id}
+                className={`
+                  cursor-pointer rounded-xl transition-all
+                  border border-pink-200/40 dark:border-pink-700/40
+                  ${
+                    lec._id === activeLecture._id
+                      ? "bg-pink-100/60 dark:bg-pink-900/40 shadow-lg"
+                      : "bg-white/60 dark:bg-white/5 hover:bg-pink-100/40 dark:hover:bg-pink-900/30"
+                  }
+                `}
+                onClick={() => handleSelectLecture(lec)}
               >
                 <CardContent className="flex items-center justify-between p-4">
-                  <div className="flex items-center">
-                    {isLectureCompleted(lecture._id) ? (
-                      <CheckCircle2 size={24} className="text-green-500 mr-2" />
+                  <div className="flex items-center gap-3">
+                    {isLectureCompleted(lec._id) ? (
+                      <CheckCircle2 className="text-green-500" size={24} />
                     ) : (
-                      <CirclePlay size={24} className="text-gray-500 mr-2" />
+                      <CirclePlay className="text-pink-500" size={24} />
                     )}
-                    <CardTitle className="text-lg font-medium">
-                      {lecture.lectureTitle}
+
+                    <CardTitle className="text-base font-medium dark:text-pink-200">
+                      {lec.lectureTitle}
                     </CardTitle>
                   </div>
 
-                  {isLectureCompleted(lecture._id) && (
+                  {isLectureCompleted(lec._id) && (
                     <Badge
-                      variant="outline"
-                      className="bg-green-200 text-green-600"
+                      className="
+                        bg-green-200 text-green-700 dark:bg-green-900/40 dark:text-green-300
+                        rounded-full px-3 py-1
+                      "
                     >
-                      Completed
+                      Done
                     </Badge>
                   )}
                 </CardContent>
@@ -169,6 +206,7 @@ const CourseProgress = () => {
             ))}
           </div>
         </div>
+
       </div>
     </div>
   );

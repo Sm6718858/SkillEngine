@@ -20,6 +20,9 @@ import SearchPage from "./pages/student/searchPage";
 import { AdminRoute, AuthenticatedUser, ProtectedRoute } from "./components/protectedRoute";
 import PurchaseCourseProtectedRoute from "./components/purchaseCourseProtectedRoute";
 import { ThemeProvider } from "./components/themeProvider";
+import InterviewPage from "./pages/Placement/interviewPage";
+import Aptitude from "./pages/Placement/aptitude";
+import CodingRound from "./pages/Placement/codingRound";
 
 function App() {
   // const showLogin = false; 
@@ -48,6 +51,15 @@ function App() {
           path: '/profile', element: <ProtectedRoute>
             <Profile />
           </ProtectedRoute>
+        },
+        {
+          path: '/interview', element: <ProtectedRoute><InterviewPage/></ProtectedRoute>
+        },
+        {
+          path: '/aptitude', element: <ProtectedRoute><Aptitude/></ProtectedRoute>
+        },
+        {
+          path: '/codingRound', element: <ProtectedRoute><CodingRound/></ProtectedRoute>
         },
         {
           path: '/course/search', element: <ProtectedRoute>
