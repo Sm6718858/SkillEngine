@@ -19,6 +19,7 @@ router.get("/profile", isAuthenticated, getUserProfile);
 router.put("/profile/update",isAuthenticated, upload.single("profilePhoto"), updateProfile);
 
 
+
 router.post("/quiz/save-result", isAuthenticated, saveQuizResult);
 
 
