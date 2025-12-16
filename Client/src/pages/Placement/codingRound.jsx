@@ -1,206 +1,317 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
 import Editor from "@monaco-editor/react";
-
-const scrollbarStyles = `
-.hide-scrollbar::-webkit-scrollbar { width: 0px; height: 0px; }
-.hide-scrollbar { scrollbar-width: none; -ms-overflow-style: none; }
-`;
-
-const PROBLEM_API =
-  "https://raw.githubusercontent.com/CoderShivam2005/skillengine-problems/refs/heads/main/leet_problems_150.json";
+import {
+  useGetProblemsQuery,
+  useSubmitSolutionMutation,
+} from "@/features/codingApi";
 
 const LANGUAGES = [
-  { id: "javascript", label: "JavaScript", piston: "javascript", version: "18.15.0" },
-  { id: "python", label: "Python 3", piston: "python", version: "3.10.0" },
-  { id: "cpp", label: "C++", piston: "cpp", version: "10.2.0" },
-  { id: "c", label: "C", piston: "c", version: "10.2.0" },
-  { id: "java", label: "Java", piston: "java", version: "15.0.2" },
+  { id: "javascript", label: "JavaScript" },
+  { id: "python", label: "Python 3" },
+  { id: "cpp", label: "C++" },
+  { id: "c", label: "C" },
+  { id: "java", label: "Java" },
 ];
 
+const DEFAULT_CODES = {
+  javascript: `console.log("Hello World");`,
+  python: `print("Hello World")`,
+  cpp: `#include <bits/stdc++.h>
+using namespace std;
+int main() {
+    cout << "Hello World";
+    return 0;
+}`,
+  c: `#include <stdio.h>
+int main() {
+    printf("Hello World");
+    return 0;
+}`,
+  java: `class Main {
+    public static void main(String[] args) {
+        System.out.println("Hello World");
+    }
+}`,
+};
+
 export default function CodingRound() {
-  const [problems, setProblems] = useState([]);
   const [selected, setSelected] = useState(null);
-
-  const [lang, setLang] = useState("javascript");
+  const [language, setLanguage] = useState("javascript");
   const [theme, setTheme] = useState("vs-dark");
-
-  const [code, setCode] = useState("");
+  const [code, setCode] = useState(DEFAULT_CODES.javascript);
   const [stdin, setStdin] = useState("");
   const [output, setOutput] = useState("");
+  const [showProblems, setShowProblems] = useState(false);
 
-  const [loading, setLoading] = useState(false);
-  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const { data } = useGetProblemsQuery();
+  const [submitSolution, { isLoading: running }] =
+    useSubmitSolutionMutation();
 
-  useEffect(() => {
-    const styleTag = document.createElement("style");
-    styleTag.innerHTML = scrollbarStyles;
-    document.head.appendChild(styleTag);
-  }, []);
+  const problems = data?.problems || [];
 
   useEffect(() => {
-    axios.get(PROBLEM_API).then((res) => {
-      setProblems(res.data || []);
-      setSelected(res.data?.[0]);
-    });
-  }, []);
+    if (!selected && problems.length) setSelected(problems[0]);
+  }, [problems, selected]);
 
   useEffect(() => {
-    if (!selected) return;
-    const starter = selected.signature?.[lang] ?? "// No starter code available";
-    setCode(starter);
-  }, [selected, lang]);
+    setCode(DEFAULT_CODES[language]);
+  }, [language]);
 
   const runCode = async () => {
-    setLoading(true);
-    setOutput("Running...");
-
-    const conf = LANGUAGES.find((l) => l.id === lang);
-
     try {
-      const res = await axios.post("https://emkc.org/api/v2/piston/execute", {
-        language: conf.piston,
-        version: conf.version,
-        files: [{ content: code }],
-        stdin,
-      });
-      const run = res.data.run;
-      setOutput((run.output || "") + (run.stderr || ""));
+      const res = await submitSolution({ language, code, stdin }).unwrap();
+      setOutput(res.stderr || res.stdout || "Program executed successfully");
     } catch {
-      setOutput("Error executing code");
+      setOutput("Execution failed ❌");
     }
+  };
 
-    setLoading(false);
+  const renderTestcases = () => {
+    if (!selected?.testcases?.length)
+      return <p className="italic text-gray-500">No Example</p>;
+
+    return selected.testcases.map((tc, i) => (
+      <div
+        key={i}
+        className="mb-3 p-4 rounded-2xl bg-black/90 text-green-400 text-sm font-mono"
+      >
+        <p className="text-pink-400 mb-2 font-semibold">
+          Example {i + 1}
+        </p>
+
+        <div className="space-y-1 overflow-x-auto">
+          <div className="whitespace-nowrap">
+            <span className="text-gray-400">Input:</span>{" "}
+            {JSON.stringify(tc.input)}
+          </div>
+
+          <div className="whitespace-nowrap">
+            <span className="text-gray-400">Output:</span>{" "}
+            {JSON.stringify(tc.output)}
+          </div>
+        </div>
+      </div>
+    ));
   };
 
   return (
-    <div className="max-w-7xl mx-auto px-4 py-6 mt-7 pt-4">
+    <div className="min-h-screen bg-gradient-to-br from-pink-50 via-purple-50 to-indigo-50 dark:from-gray-950 dark:via-gray-900 dark:to-gray-950 mt-9 pt-9">
 
-      <button
-        className="md:hidden mb-4 px-4 py-2 rounded-xl bg-gradient-to-r from-pink-600 to-purple-600 text-white shadow"
-        onClick={() => setSidebarOpen(!sidebarOpen)}
-      >
-        {sidebarOpen ? "Hide Problems" : "Show Problems"}
-      </button>
+      <header className="sticky top-0 z-30 bg-white/70 dark:bg-gray-900/70 backdrop-blur-xl border-b">
+        <div className="max-w-7xl mx-auto px-4 py-3">
 
-      <div className="flex gap-6">
-
-        <div
-          className={`
-          hide-scrollbar
-          ${sidebarOpen ? "block" : "hidden"} 
-          md:block
-          w-full md:w-72 h-[80vh] overflow-y-auto
-          p-4 rounded-2xl mt-4
-          bg-white/60 dark:bg-gray-900/60 backdrop-blur-xl
-          border border-pink-400/30 shadow-xl
-          transition-all duration-300
-        `}
-        >
-          <h2 className="text-xl font-bold text-center mb-4 bg-gradient-to-r from-pink-600 to-purple-600 text-transparent bg-clip-text">Problem List</h2>
-
-          {problems.map((p) => (
-            <div
-              key={p.id}
-              onClick={() => {
-                setSelected(p);
-                setSidebarOpen(false);
-              }}
-              className={`
-                cursor-pointer p-3 mb-2 rounded-xl border
-                transition-all hover:scale-[1.02]
-                ${
-                  selected?.id === p.id
-                    ? "bg-gradient-to-r from-pink-600 to-purple-600 text-white shadow"
-                    : "bg-white/70 dark:bg-gray-800 border-gray-300 dark:border-gray-700 hover:bg-pink-100"
-                }
-              `}
+          {/* ---------------- Mobile ---------------- */}
+          <div className="md:hidden flex flex-col gap-3">
+            <button
+              onClick={() => setShowProblems(true)}
+              className="
+    self-center
+    px-4 py-2
+    rounded-xl
+    bg-gradient-to-r from-pink-600 to-purple-600
+    text-white text-sm font-medium
+    shadow-md
+    cursor-pointer
+  "
             >
-              <p className="font-semibold">{p.title}</p>
-              <p className="text-xs opacity-75">{p.difficulty}</p>
-            </div>
-          ))}
-        </div>
+              Problems
+            </button>
 
-        <div className="flex-1 space-y-6">
+
+            <h1
+              className="
+          text-center
+          font-extrabold
+          text-sm
+          leading-snug
+          bg-gradient-to-r from-pink-600 to-purple-600
+          text-transparent bg-clip-text
+        "
+            >
+              Improve Your Coding Skills — Write Code from Scratch
+            </h1>
+          </div>
+
+          {/* ---------------- Desktop ---------------- */}
+          <div className="hidden md:flex items-center justify-center">
+            <h1
+              className="
+          font-extrabold
+          text-lg lg:text-xl
+          text-center
+          bg-gradient-to-r from-pink-600 to-purple-600
+          text-transparent bg-clip-text
+        "
+            >
+              Improve Your Coding Skills — Write Code from Scratch
+            </h1>
+          </div>
+
+        </div>
+      </header>
+
+
+      {/* ---------------- MOBILE PROBLEMS DRAWER ---------------- */}
+      {showProblems && (
+        <div className="fixed inset-0 z-50 md:hidden ">
+          <div
+            onClick={() => setShowProblems(false)}
+            className="absolute inset-0 bg-black/40 backdrop-blur-sm"
+          />
+
+          <div className="absolute left-0 top-0 h-full w-[85%] bg-white dark:bg-gray-900 shadow-2xl animate-slideIn flex flex-col">
+            <div className="flex items-center justify-between p-4 border-b">
+              <h2 className="font-bold text-lg text-pink-600">
+                Problems ({problems.length})
+              </h2>
+              <button
+                onClick={() => setShowProblems(false)}
+                className="text-sm font-semibold text-gray-500 cursor-pointer"
+              >
+                Close ✕
+              </button>
+            </div>
+
+            <div className="flex-1 overflow-y-auto p-3 space-y-2 hide-scrollbar">
+              {problems.map((p) => (
+                <div
+                  key={p.id}
+                  onClick={() => {
+                    setSelected(p);
+                    setShowProblems(false);
+                  }}
+                  className={`p-3 rounded-xl cursor-pointer transition ${selected?.id === p.id
+                    ? "bg-gradient-to-r from-pink-600 to-purple-600 text-white"
+                    : "hover:bg-pink-100 dark:hover:bg-gray-800"
+                    }`}
+                >
+                  <p className="font-semibold text-sm">{p.title}</p>
+                  <p className="text-xs opacity-70">{p.difficulty}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
+
+      <div className="max-w-7xl mx-auto px-4 mt-6 grid md:grid-cols-[300px_1fr] gap-6">
+
+        {/* ---------------- Desktop Sidebar ---------------- */}
+        <aside className="hidden md:flex flex-col rounded-3xl bg-white/70 dark:bg-gray-900/70 border border-pink-300/30 h-[600px]">
+          <h2 className="font-bold text-center py-4 text-pink-600">
+            Problems ({problems.length})
+          </h2>
+
+          <div className="flex-1 overflow-y-auto px-3 pb-4 space-y-2 hide-scrollbar">
+            {problems.map((p) => (
+              <div
+                key={p.id}
+                onClick={() => setSelected(p)}
+                className={`p-3 rounded-xl cursor-pointer transition ${selected?.id === p.id
+                  ? "bg-gradient-to-r from-pink-600 to-purple-600 text-white shadow-md"
+                  : "hover:bg-pink-100 dark:hover:bg-gray-800"
+                  }`}
+              >
+                <p className="font-semibold text-sm">{p.title}</p>
+                <p className="text-xs opacity-70">{p.difficulty}</p>
+              </div>
+            ))}
+          </div>
+        </aside>
+
+        <main className="space-y-5">
 
           {selected && (
-            <div className="p-6 rounded-2xl shadow-xl bg-white/70 dark:bg-gray-900/60 backdrop-blur-xl border border-pink-300/30">
+            <div className="p-6 rounded-3xl bg-white/70 dark:bg-gray-900/70 border">
               <h2 className="text-2xl font-bold">{selected.title}</h2>
-              <p className="mt-2 text-gray-700 dark:text-gray-300">
+              <p className="mt-3 text-gray-700 dark:text-gray-300">
                 {selected.description}
               </p>
-              {selected.tags && (
-                <p className="mt-2 opacity-75 text-sm">Tags: {selected.tags.join(", ")}</p>
-              )}
+
+              <div className="mt-5">
+                <h3 className="font-semibold mb-3 text-pink-600">
+                  Examples
+                </h3>
+                {renderTestcases()}
+              </div>
             </div>
           )}
 
-          <div className="p-4 rounded-xl bg-white/60 dark:bg-gray-800/60 shadow-lg border border-pink-300/30 flex flex-col md:flex-row gap-4 items-center">
+          <div className="flex flex-wrap gap-3 p-4 rounded-2xl bg-white/70 dark:bg-gray-900/70 border">
+            <select
+              value={language}
+              onChange={(e) => setLanguage(e.target.value)}
+              className="px-3 py-2 rounded-lg border
+    bg-white text-gray-900
+    dark:bg-gray-900 dark:text-white
+    dark:border-gray-700
+    focus:outline-none focus:ring-2 focus:ring-pink-500"
+            >
+              {LANGUAGES.map((l) => (
+                <option key={l.id} value={l.id}>
+                  {l.label}
+                </option>
+              ))}
+            </select>
 
-            <div>
-              <label className="font-medium">Language:</label>
-              <select
-                value={lang}
-                onChange={(e) => setLang(e.target.value)}
-                className="ml-2 px-3 py-2 rounded-lg border dark:bg-gray-900"
+            <select
+              value={theme}
+              onChange={(e) => setTheme(e.target.value)}
+              className="
+    px-3 py-2 rounded-lg border
+    bg-white text-gray-900
+    dark:bg-gray-900 dark:text-white
+    dark:border-gray-700
+    focus:outline-none focus:ring-2 focus:ring-pink-500
+  "
+            >
+              <option
+                value="vs-dark"
+                className="bg-gray-900 text-white"
               >
-                {LANGUAGES.map((l) => (
-                  <option key={l.id} value={l.id}>
-                    {l.label}
-                  </option>
-                ))}
-              </select>
-            </div>
+                Dark
+              </option>
 
-            <div>
-              <label className="font-medium">Theme:</label>
-              <select
-                value={theme}
-                onChange={(e) => setTheme(e.target.value)}
-                className="ml-2 px-3 py-2 rounded-lg border dark:bg-gray-900"
+              <option
+                value="light"
+                className="bg-white text-gray-900"
               >
-                <option value="vs-dark">Dark</option>
-                <option value="light">Light</option>
-              </select>
-            </div>
+                Light
+              </option>
+            </select>
+
 
             <button
               onClick={runCode}
-              className="px-6 py-2 bg-gradient-to-r from-pink-600 to-purple-600 text-white rounded-xl shadow ml-auto"
+              disabled={running}
+              className="ml-auto px-6 py-2 rounded-xl bg-gradient-to-r from-pink-600 to-purple-600 text-white"
             >
-              {loading ? "Running..." : "Run ▶"}
+              {running ? "Running…" : "Run ▶"}
             </button>
           </div>
 
-          <div
-            className="rounded-2xl overflow-hidden shadow-xl border border-pink-400/30"
-            style={{ height: "380px" }}
-          >
+          {/* Editor */}
+          <div className="h-[420px] rounded-3xl overflow-hidden border">
             <Editor
-              language={lang}
+              language={language}
               theme={theme}
               value={code}
-              onChange={(v) => setCode(v)}
-              options={{ fontSize: 15, minimap: { enabled: false }, automaticLayout: true }}
+              onChange={(v) => setCode(v || "")}
+              options={{ fontSize: 14, minimap: { enabled: false } }}
             />
           </div>
 
-          <div className="p-4 rounded-xl bg-white/60 dark:bg-gray-800/60 border shadow">
-            <label className="font-medium">Custom Input (stdin):</label>
-            <textarea
-              rows={3}
-              value={stdin}
-              onChange={(e) => setStdin(e.target.value)}
-              className="w-full mt-2 p-3 rounded-lg border dark:bg-gray-900"
-            />
-          </div>
+          <textarea
+            value={stdin}
+            onChange={(e) => setStdin(e.target.value)}
+            placeholder="Input (stdin)"
+            className="w-full h-24 p-4 rounded-2xl border"
+          />
 
-          <div className="p-6 bg-black text-green-400 rounded-2xl shadow-inner border border-purple-600/40 whitespace-pre-wrap">
-            <h3 className="text-lg font-bold text-white mb-2">Output:</h3>
-            {output}
-          </div>
-        </div>
+          <pre className="p-5 rounded-3xl bg-black text-green-400 font-mono">
+            {output || "Output will appear here…"}
+          </pre>
+        </main>
       </div>
     </div>
   );

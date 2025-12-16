@@ -198,9 +198,23 @@
 .hide-scrollbar::-webkit-scrollbar {
   width: 0px;
   height: 0px;
+  display: none;    
 }
 
 .hide-scrollbar {
   scrollbar-width: none; 
   -ms-overflow-style: none; 
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+.animate-slideIn {
+  animation: slideIn 0.3s ease-out forwards;
 }

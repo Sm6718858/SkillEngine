@@ -8,6 +8,7 @@ import cookieParser from 'cookie-parser';
 import mediaRoute from './Routes/mediaRoute.js';
 import purchaseRoute from './Routes/purchaseRoute.js';  
 import courseProgressRoute from './Routes/courseProgressRoute.js';
+import submissionRoute from './Routes/submissionRoutes.js'
 
 dotenv.config();
 connectDB();
@@ -30,6 +31,7 @@ app.use('/api/user', userRoute);
 app.use('/api/course',courseRoute)
 app.use('/api/purchase', purchaseRoute);
 app.use("/api/progress", courseProgressRoute);
+app.use('/api/coding',submissionRoute);
 
 app.get('/', (req, res) => {
   res.send('Server is running...');
