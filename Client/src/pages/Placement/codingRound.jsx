@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import Editor from "@monaco-editor/react";
 import {
   useGetProblemsQuery,
+  useImproveCodeWithAIMutation,
   useSubmitSolutionMutation,
 } from "@/features/codingApi";
 
@@ -43,9 +44,14 @@ export default function CodingRound() {
   const [output, setOutput] = useState("");
   const [showProblems, setShowProblems] = useState(false);
 
+  const [showAIOverlay, setShowAIOverlay] = useState(false);
+  const [aiCode, setAiCode] = useState("");
+  const [aiLoading, setAiLoading] = useState(false);
+
   const { data } = useGetProblemsQuery();
   const [submitSolution, { isLoading: running }] =
     useSubmitSolutionMutation();
+  const [improveCodeWithAI] = useImproveCodeWithAIMutation();
 
   const problems = data?.problems || [];
 
@@ -57,6 +63,19 @@ export default function CodingRound() {
     setCode(DEFAULT_CODES[language]);
   }, [language]);
 
+  const handleImproveWithAI = async () => {
+    setShowAIOverlay(true);
+    setAiLoading(true);
+    try {
+      const res = await improveCodeWithAI({ code, language }).unwrap();
+      setAiCode(res.improvedCode || code);
+    } catch {
+      setAiCode(code);
+    } finally {
+      setAiLoading(false);
+    }
+  };
+
   const runCode = async () => {
     try {
       const res = await submitSolution({ language, code, stdin }).unwrap();
@@ -66,113 +85,51 @@ export default function CodingRound() {
     }
   };
 
-  const renderTestcases = () => {
-    if (!selected?.testcases?.length)
-      return <p className="italic text-gray-500">No Example</p>;
-
-    return selected.testcases.map((tc, i) => (
-      <div
-        key={i}
-        className="mb-3 p-4 rounded-2xl bg-black/90 text-green-400 text-sm font-mono"
-      >
-        <p className="text-pink-400 mb-2 font-semibold">
-          Example {i + 1}
-        </p>
-
-        <div className="space-y-1 overflow-x-auto">
-          <div className="whitespace-nowrap">
-            <span className="text-gray-400">Input:</span>{" "}
-            {JSON.stringify(tc.input)}
-          </div>
-
-          <div className="whitespace-nowrap">
-            <span className="text-gray-400">Output:</span>{" "}
-            {JSON.stringify(tc.output)}
-          </div>
-        </div>
-      </div>
-    ));
-  };
-
   return (
-    <div className="min-h-screen bg-gradient-to-br from-pink-50 via-purple-50 to-indigo-50 dark:from-gray-950 dark:via-gray-900 dark:to-gray-950 mt-9 pt-9">
+    <div className="min-h-screen mt-9 pt-9 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-pink-200/40 via-purple-200/30 to-indigo-200/40 dark:from-gray-950 dark:via-gray-900 dark:to-black">
 
-      <header className="sticky top-0 z-30 bg-white/70 dark:bg-gray-900/70 backdrop-blur-xl border-b">
-        <div className="max-w-7xl mx-auto px-4 py-3">
+      <header className="sticky top-0 z-30 bg-white/40 dark:bg-gray-900/40 backdrop-blur-2xl border-b border-white/30 dark:border-gray-700/40">
+  <div className="max-w-7xl mx-auto px-4 py-3">
 
-          {/* ---------------- Mobile ---------------- */}
-          <div className="md:hidden flex flex-col gap-3">
-            <button
-              onClick={() => setShowProblems(true)}
-              className="
-    self-center
-    px-4 py-2
-    rounded-xl
-    bg-gradient-to-r from-pink-600 to-purple-600
-    text-white text-sm font-medium
-    shadow-md
-    cursor-pointer
-  "
-            >
-              Problems
-            </button>
+    {/* Mobile */}
+    <div className="md:hidden flex flex-col items-center gap-3">
+      <button
+        onClick={() => setShowProblems(true)}
+        className="px-4 py-2 rounded-xl bg-gradient-to-r from-pink-600 to-purple-600 text-white text-sm"
+      >
+        Problems
+      </button>
 
+      <h1 className="text-center font-extrabold text-sm leading-snug bg-gradient-to-r from-pink-600 to-purple-600 text-transparent bg-clip-text">
+        Improve Your Coding Skills — Write Code from Scratch
+      </h1>
+    </div>
 
-            <h1
-              className="
-          text-center
-          font-extrabold
-          text-sm
-          leading-snug
-          bg-gradient-to-r from-pink-600 to-purple-600
-          text-transparent bg-clip-text
-        "
-            >
-              Improve Your Coding Skills — Write Code from Scratch
-            </h1>
-          </div>
+    {/* Desktop */}
+    <div className="hidden md:flex items-center justify-center">
+      <h1 className="font-extrabold text-lg lg:text-xl bg-gradient-to-r from-pink-600 to-purple-600 text-transparent bg-clip-text">
+        Improve Your Coding Skills — Write Code from Scratch
+      </h1>
+    </div>
 
-          {/* ---------------- Desktop ---------------- */}
-          <div className="hidden md:flex items-center justify-center">
-            <h1
-              className="
-          font-extrabold
-          text-lg lg:text-xl
-          text-center
-          bg-gradient-to-r from-pink-600 to-purple-600
-          text-transparent bg-clip-text
-        "
-            >
-              Improve Your Coding Skills — Write Code from Scratch
-            </h1>
-          </div>
-
-        </div>
-      </header>
+  </div>
+</header>
 
 
-      {/* ---------------- MOBILE PROBLEMS DRAWER ---------------- */}
       {showProblems && (
-        <div className="fixed inset-0 z-50 md:hidden ">
+        <div className="fixed inset-0 z-50 md:hidden">
           <div
             onClick={() => setShowProblems(false)}
-            className="absolute inset-0 bg-black/40 backdrop-blur-sm"
+            className="absolute inset-0 bg-black/50 backdrop-blur-sm"
           />
-
-          <div className="absolute left-0 top-0 h-full w-[85%] bg-white dark:bg-gray-900 shadow-2xl animate-slideIn flex flex-col">
-            <div className="flex items-center justify-between p-4 border-b">
-              <h2 className="font-bold text-lg text-pink-600">
+          <div className="absolute left-0 top-0 h-full w-[85%] bg-white/80 dark:bg-gray-900/80 backdrop-blur-2xl shadow-2xl">
+            <div className="flex justify-between items-center p-4 border-b">
+              <h2 className="font-bold text-pink-600">
                 Problems ({problems.length})
               </h2>
-              <button
-                onClick={() => setShowProblems(false)}
-                className="text-sm font-semibold text-gray-500 cursor-pointer"
-              >
-                Close ✕
-              </button>
+              <button onClick={() => setShowProblems(false)}>✕</button>
             </div>
-
-            <div className="flex-1 overflow-y-auto p-3 space-y-2 hide-scrollbar">
+            <div className="p-3 space-y-2 overflow-y-auto">
               {problems.map((p) => (
                 <div
                   key={p.id}
@@ -180,10 +137,11 @@ export default function CodingRound() {
                     setSelected(p);
                     setShowProblems(false);
                   }}
-                  className={`p-3 rounded-xl cursor-pointer transition ${selected?.id === p.id
-                    ? "bg-gradient-to-r from-pink-600 to-purple-600 text-white"
-                    : "hover:bg-pink-100 dark:hover:bg-gray-800"
-                    }`}
+                  className={`p-3 rounded-xl cursor-pointer ${
+                    selected?.id === p.id
+                      ? "bg-gradient-to-r from-pink-600 to-purple-600 text-white"
+                      : "hover:bg-pink-100 dark:hover:bg-gray-800"
+                  }`}
                 >
                   <p className="font-semibold text-sm">{p.title}</p>
                   <p className="text-xs opacity-70">{p.difficulty}</p>
@@ -194,23 +152,22 @@ export default function CodingRound() {
         </div>
       )}
 
-      <div className="max-w-7xl mx-auto px-4 mt-6 grid md:grid-cols-[300px_1fr] gap-6">
+      <div className="max-w-7xl mx-auto px-4 mt-6 grid md:grid-cols-[300px_1fr] gap-6 hide:scrollbar">
 
-        {/* ---------------- Desktop Sidebar ---------------- */}
-        <aside className="hidden md:flex flex-col rounded-3xl bg-white/70 dark:bg-gray-900/70 border border-pink-300/30 h-[600px]">
+        <aside className="hidden md:flex flex-col rounded-3xl h-[620px] bg-white/40 dark:bg-gray-900/40 backdrop-blur-2xl border border-white/30 dark:border-gray-700/40 shadow-xl hide:scrollbar">
           <h2 className="font-bold text-center py-4 text-pink-600">
             Problems ({problems.length})
           </h2>
-
           <div className="flex-1 overflow-y-auto px-3 pb-4 space-y-2 hide-scrollbar">
             {problems.map((p) => (
               <div
                 key={p.id}
                 onClick={() => setSelected(p)}
-                className={`p-3 rounded-xl cursor-pointer transition ${selected?.id === p.id
-                  ? "bg-gradient-to-r from-pink-600 to-purple-600 text-white shadow-md"
-                  : "hover:bg-pink-100 dark:hover:bg-gray-800"
-                  }`}
+                className={`p-3 rounded-xl cursor-pointer ${
+                  selected?.id === p.id
+                    ? "bg-gradient-to-r from-pink-600 to-purple-600 text-white"
+                    : "hover:bg-white/60 dark:hover:bg-gray-800/60"
+                }`}
               >
                 <p className="font-semibold text-sm">{p.title}</p>
                 <p className="text-xs opacity-70">{p.difficulty}</p>
@@ -221,98 +178,66 @@ export default function CodingRound() {
 
         <main className="space-y-5">
 
-          {selected && (
-            <div className="p-6 rounded-3xl bg-white/70 dark:bg-gray-900/70 border">
-              <h2 className="text-2xl font-bold">{selected.title}</h2>
-              <p className="mt-3 text-gray-700 dark:text-gray-300">
-                {selected.description}
-              </p>
-
-              <div className="mt-5">
-                <h3 className="font-semibold mb-3 text-pink-600">
-                  Examples
-                </h3>
-                {renderTestcases()}
-              </div>
-            </div>
-          )}
-
-          <div className="flex flex-wrap gap-3 p-4 rounded-2xl bg-white/70 dark:bg-gray-900/70 border">
-            <select
-              value={language}
-              onChange={(e) => setLanguage(e.target.value)}
-              className="px-3 py-2 rounded-lg border
-    bg-white text-gray-900
-    dark:bg-gray-900 dark:text-white
-    dark:border-gray-700
-    focus:outline-none focus:ring-2 focus:ring-pink-500"
-            >
+          <div className="flex flex-wrap gap-3 p-4 rounded-2xl bg-white/40 dark:bg-gray-900/40 backdrop-blur-xl border border-white/30 dark:border-gray-700/40">
+            <select value={language} onChange={(e) => setLanguage(e.target.value)} className="px-3 py-2 rounded-lg bg-white/60 dark:bg-gray-900/60">
               {LANGUAGES.map((l) => (
-                <option key={l.id} value={l.id}>
-                  {l.label}
-                </option>
+                <option key={l.id} value={l.id}>{l.label}</option>
               ))}
             </select>
 
-            <select
-              value={theme}
-              onChange={(e) => setTheme(e.target.value)}
-              className="
-    px-3 py-2 rounded-lg border
-    bg-white text-gray-900
-    dark:bg-gray-900 dark:text-white
-    dark:border-gray-700
-    focus:outline-none focus:ring-2 focus:ring-pink-500
-  "
-            >
-              <option
-                value="vs-dark"
-                className="bg-gray-900 text-white"
-              >
-                Dark
-              </option>
-
-              <option
-                value="light"
-                className="bg-white text-gray-900"
-              >
-                Light
-              </option>
+            <select value={theme} onChange={(e) => setTheme(e.target.value)} className="px-3 py-2 rounded-lg bg-white/60 dark:bg-gray-900/60">
+              <option value="vs-dark">Dark</option>
+              <option value="light">Light</option>
             </select>
 
-
-            <button
-              onClick={runCode}
-              disabled={running}
-              className="ml-auto px-6 py-2 rounded-xl bg-gradient-to-r from-pink-600 to-purple-600 text-white"
-            >
+            <button onClick={runCode} disabled={running} className="ml-auto px-6 py-2 rounded-xl bg-gradient-to-r from-pink-600 to-purple-600 text-white">
               {running ? "Running…" : "Run ▶"}
+            </button>
+
+            <button onClick={handleImproveWithAI} className="px-4 py-2 rounded-xl bg-gradient-to-r from-purple-600 to-pink-600 text-white">
+              Improve Code with AI
             </button>
           </div>
 
-          {/* Editor */}
-          <div className="h-[420px] rounded-3xl overflow-hidden border">
-            <Editor
-              language={language}
-              theme={theme}
-              value={code}
-              onChange={(v) => setCode(v || "")}
-              options={{ fontSize: 14, minimap: { enabled: false } }}
-            />
+          <div className="h-[420px] rounded-3xl overflow-hidden bg-black/80 shadow-2xl">
+            <Editor language={language} theme={theme} value={code} onChange={(v) => setCode(v || "")} />
           </div>
 
-          <textarea
-            value={stdin}
-            onChange={(e) => setStdin(e.target.value)}
-            placeholder="Input (stdin)"
-            className="w-full h-24 p-4 rounded-2xl border"
-          />
+          <textarea value={stdin} onChange={(e) => setStdin(e.target.value)} placeholder="Input (stdin)" className="w-full h-24 p-4 rounded-2xl bg-white/50 dark:bg-gray-900/50 backdrop-blur-xl" />
 
-          <pre className="p-5 rounded-3xl bg-black text-green-400 font-mono">
+          <pre className="p-5 rounded-3xl bg-black/90 text-green-400 font-mono">
             {output || "Output will appear here…"}
           </pre>
         </main>
       </div>
+
+      {showAIOverlay && (
+        <div className="fixed inset-0 z-[999] bg-black/50 backdrop-blur-xl flex items-center justify-center">
+          <div className="w-[95%] md:w-[80%] h-[85%] bg-white/50 dark:bg-gray-900/50 backdrop-blur-2xl rounded-3xl shadow-2xl flex flex-col overflow-hidden">
+            <div className="flex justify-between px-6 py-4 border-b">
+              <h2 className="font-bold text-pink-600">AI Improved Code</h2>
+              <button onClick={() => setShowAIOverlay(false)}>✕</button>
+            </div>
+            <div className="flex-1">
+              {aiLoading ? (
+                <div className="flex items-center justify-center h-full text-pink-500 animate-pulse">
+                  Improving code…
+                </div>
+              ) : (
+                <Editor language={language} theme={theme} value={aiCode} options={{ readOnly: true }} />
+              )}
+            </div>
+            <div className="flex gap-3 p-4 border-t">
+              <button onClick={() => { setCode(aiCode); setShowAIOverlay(false); }} className="flex-1 bg-green-600 text-white rounded-xl py-2">
+                Replace Code
+              </button>
+              <button onClick={() => setShowAIOverlay(false)} className="flex-1 bg-gray-200 dark:bg-gray-800 rounded-xl py-2">
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

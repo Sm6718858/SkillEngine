@@ -1,6 +1,6 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
-const CODING_API = `${import.meta.env.VITE_API_BASE_URL}/api/coding/`;
+const CODING_API = `${import.meta.env.VITE_API_BASE_URL}/api/`;
 
 export const codingApi = createApi({
   reducerPath: "codingApi",
@@ -9,25 +9,25 @@ export const codingApi = createApi({
     credentials: "include",
   }),
   endpoints: (builder) => ({
+    // existing
     submitSolution: builder.mutation({
       query: (body) => ({
-        url: "submit",
+        url: "coding/submit",
         method: "POST",
         body,
       }),
     }),
 
     getProblems: builder.query({
-      query: () => ({
-        url: "getProblems",
-        method: "GET",
-      }),
+      query: () => "coding/getProblems",
     }),
 
-    getSingleProblem: builder.query({
-      query: (id) => ({
-        url: `problems/${id}`,
-        method: "GET",
+    // 🔥 NEW — AI IMPROVE
+    improveCodeWithAI: builder.mutation({
+      query: (body) => ({
+        url: "compiler-ai/improve",
+        method: "POST",
+        body,
       }),
     }),
   }),
@@ -36,5 +36,5 @@ export const codingApi = createApi({
 export const {
   useSubmitSolutionMutation,
   useGetProblemsQuery,
-  useGetSingleProblemQuery,
+  useImproveCodeWithAIMutation, // 👈 export this
 } = codingApi;
