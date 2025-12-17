@@ -154,7 +154,7 @@ const VoiceInterview = () => {
       <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-6">
         <div className="relative aspect-video rounded-3xl overflow-hidden shadow-2xl border border-pink-400/30">
           <img
-            src="https://images.unsplash.com/photo-1620712943543-bcc4688e7485"
+            src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRgb08z67ti5_v10zthOXxgLjpzvrGff2AGlg&s"
             className="w-full h-full object-cover"
             alt="AI Interviewer"
           />
