@@ -10,6 +10,7 @@ import purchaseRoute from './Routes/purchaseRoute.js';
 import courseProgressRoute from './Routes/courseProgressRoute.js';
 import submissionRoute from './Routes/submissionRoutes.js'
 import aiCompilerRoutes from './Routes/aiCompiler.js'
+import interviewRoutes from './Routes/interview.js';
 
 dotenv.config();
 connectDB();
@@ -34,6 +35,7 @@ app.use('/api/purchase', purchaseRoute);
 app.use("/api/progress", courseProgressRoute);
 app.use('/api/coding',submissionRoute);
 app.use("/api/compiler-ai", aiCompilerRoutes);
+app.use('/api',interviewRoutes);
 
 app.get('/', (req, res) => {
   res.send('Server is running...');

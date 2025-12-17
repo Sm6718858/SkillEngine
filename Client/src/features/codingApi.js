@@ -9,7 +9,6 @@ export const codingApi = createApi({
     credentials: "include",
   }),
   endpoints: (builder) => ({
-    // existing
     submitSolution: builder.mutation({
       query: (body) => ({
         url: "coding/submit",
@@ -22,7 +21,6 @@ export const codingApi = createApi({
       query: () => "coding/getProblems",
     }),
 
-    // 🔥 NEW — AI IMPROVE
     improveCodeWithAI: builder.mutation({
       query: (body) => ({
         url: "compiler-ai/improve",

@@ -81,7 +81,7 @@ export default function CodingRound() {
       const res = await submitSolution({ language, code, stdin }).unwrap();
       setOutput(res.stderr || res.stdout || "Program executed successfully");
     } catch {
-      setOutput("Execution failed ❌");
+      setOutput("Execution failed");
     }
   };
 
@@ -194,7 +194,7 @@ export default function CodingRound() {
               {running ? "Running…" : "Run ▶"}
             </button>
 
-            <button onClick={handleImproveWithAI} className="px-4 py-2 rounded-xl bg-gradient-to-r from-purple-600 to-pink-600 text-white">
+            <button onClick={handleImproveWithAI} className="px-4 py-2 rounded-xl bg-gradient-to-r from-purple-600 to-pink-600 text-white cursor-pointer">
               Improve Code with AI
             </button>
           </div>
@@ -216,7 +216,7 @@ export default function CodingRound() {
           <div className="w-[95%] md:w-[80%] h-[85%] bg-white/50 dark:bg-gray-900/50 backdrop-blur-2xl rounded-3xl shadow-2xl flex flex-col overflow-hidden">
             <div className="flex justify-between px-6 py-4 border-b">
               <h2 className="font-bold text-pink-600">AI Improved Code</h2>
-              <button onClick={() => setShowAIOverlay(false)}>✕</button>
+              <button className="cursor-pointer" onClick={() => setShowAIOverlay(false)}>✕</button>
             </div>
             <div className="flex-1">
               {aiLoading ? (
@@ -228,10 +228,10 @@ export default function CodingRound() {
               )}
             </div>
             <div className="flex gap-3 p-4 border-t">
-              <button onClick={() => { setCode(aiCode); setShowAIOverlay(false); }} className="flex-1 bg-green-600 text-white rounded-xl py-2">
+              <button onClick={() => { setCode(aiCode); setShowAIOverlay(false); }} className="flex-1 bg-green-600 text-white rounded-xl py-2 cursor-pointer">
                 Replace Code
               </button>
-              <button onClick={() => setShowAIOverlay(false)} className="flex-1 bg-gray-200 dark:bg-gray-800 rounded-xl py-2">
+              <button onClick={() => setShowAIOverlay(false)} className="flex-1 bg-gray-200 dark:bg-gray-800 rounded-xl py-2 cursor-pointer">
                 Cancel
               </button>
             </div>
