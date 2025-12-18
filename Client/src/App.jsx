@@ -23,6 +23,7 @@ import { ThemeProvider } from "./components/themeProvider";
 import InterviewPage from "./pages/Placement/interviewPage";
 import Aptitude from "./pages/Placement/aptitude";
 import CodingRound from "./pages/Placement/codingRound";
+import GroupStudy from './pages/student/groupStudy';
 
 function App() {
   // const showLogin = false; 
@@ -51,6 +52,9 @@ function App() {
           path: '/profile', element: <ProtectedRoute>
             <Profile />
           </ProtectedRoute>
+        },
+        {
+          path: '/groupStudy',element: <ProtectedRoute><GroupStudy/></ProtectedRoute>
         },
         {
           path: '/interview', element: <ProtectedRoute><InterviewPage/></ProtectedRoute>

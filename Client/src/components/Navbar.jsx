@@ -196,6 +196,8 @@ const UserMenu = ({ user, handleLogout }) => (
       )}
 
       <DropdownMenuSeparator />
+      <DropdownMenuItem><Link to="/groupStudy">Group-Study</Link></DropdownMenuItem>
+      <DropdownMenuSeparator />
 
       <DropdownMenuItem onClick={handleLogout} className="text-red-600 dark:text-red-400">
         Logout
@@ -289,6 +291,7 @@ const MobileNav = ({ user }) => {
             <>
               <MobileLink to="/myLearning" icon={<BookOpen size={20} />}>My Learning</MobileLink>
               <MobileLink to="/profile" icon={<User size={20} />}>Edit Profile</MobileLink>
+              <MobileLink to="/groupStudy" icon={<User size={20} />}>Group-Study</MobileLink>
 
               {user.role === "instructor" && (
                 <MobileLink to="/admin/dashboard" icon={<LayoutDashboard size={20} />}>
