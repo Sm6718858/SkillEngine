@@ -89,41 +89,39 @@ export default function CodingRound() {
     <div className="min-h-screen mt-9 pt-9 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-pink-200/40 via-purple-200/30 to-indigo-200/40 dark:from-gray-950 dark:via-gray-900 dark:to-black">
 
       <header className="sticky top-0 z-30 bg-white/40 dark:bg-gray-900/40 backdrop-blur-2xl border-b border-white/30 dark:border-gray-700/40">
-  <div className="max-w-7xl mx-auto px-4 py-3">
+        <div className="max-w-7xl mx-auto px-4 py-1">
 
-    {/* Mobile */}
-    <div className="md:hidden flex flex-col items-center gap-3">
-      <button
-        onClick={() => setShowProblems(true)}
-        className="px-4 py-2 rounded-xl bg-gradient-to-r from-pink-600 to-purple-600 text-white text-sm"
-      >
-        Problems
-      </button>
+          <div className="md:hidden flex flex-col items-center gap-3">
+            <button
+              onClick={() => setShowProblems(true)}
+              className="px-4 py-2 rounded-xl bg-gradient-to-r from-pink-600 to-purple-600 text-white text-sm"
+            >
+              Problems
+            </button>
 
-      <h1 className="text-center font-extrabold text-sm leading-snug bg-gradient-to-r from-pink-600 to-purple-600 text-transparent bg-clip-text">
-        Improve Your Coding Skills — Write Code from Scratch
-      </h1>
-    </div>
+            <h1 className="text-center font-extrabold text-sm leading-snug bg-gradient-to-r from-pink-600 to-purple-600 text-transparent bg-clip-text">
+              Improve Your Coding Skills — Write Code from Scratch
+            </h1>
+          </div>
 
-    {/* Desktop */}
-    <div className="hidden md:flex items-center justify-center">
-      <h1 className="font-extrabold text-lg lg:text-xl bg-gradient-to-r from-pink-600 to-purple-600 text-transparent bg-clip-text">
-        Improve Your Coding Skills — Write Code from Scratch
-      </h1>
-    </div>
+          <div className="hidden md:flex items-center justify-center">
+            <h1 className="font-extrabold text-lg lg:text-xl bg-gradient-to-r from-pink-600 to-purple-600 text-transparent bg-clip-text">
+              Improve Your Coding Skills — Write Code from Scratch
+            </h1>
+          </div>
 
-  </div>
-</header>
+        </div>
+      </header>
 
 
       {showProblems && (
-        <div className="fixed inset-0 z-50 md:hidden">
+        <div className="fixed inset-0 z-50 md:hidden hide-scrollbar">
           <div
             onClick={() => setShowProblems(false)}
             className="absolute inset-0 bg-black/50 backdrop-blur-sm"
           />
-          <div className="absolute left-0 top-0 h-full w-[85%] bg-white/80 dark:bg-gray-900/80 backdrop-blur-2xl shadow-2xl">
-            <div className="flex justify-between items-center p-4 border-b">
+          <div className="absolute left-0 top-0 h-full w-[85%] bg-white/80 dark:bg-gray-900/80 backdrop-blur-2xl shadow-2xl hide-scrollbar">
+            <div className="flex justify-between items-center p-4 border-b hide-scrollbar">
               <h2 className="font-bold text-pink-600">
                 Problems ({problems.length})
               </h2>
@@ -137,11 +135,10 @@ export default function CodingRound() {
                     setSelected(p);
                     setShowProblems(false);
                   }}
-                  className={`p-3 rounded-xl cursor-pointer ${
-                    selected?.id === p.id
+                  className={`p-3 rounded-xl cursor-pointer ${selected?.id === p.id
                       ? "bg-gradient-to-r from-pink-600 to-purple-600 text-white"
                       : "hover:bg-pink-100 dark:hover:bg-gray-800"
-                  }`}
+                    }`}
                 >
                   <p className="font-semibold text-sm">{p.title}</p>
                   <p className="text-xs opacity-70">{p.difficulty}</p>
@@ -163,11 +160,10 @@ export default function CodingRound() {
               <div
                 key={p.id}
                 onClick={() => setSelected(p)}
-                className={`p-3 rounded-xl cursor-pointer ${
-                  selected?.id === p.id
+                className={`p-3 rounded-xl cursor-pointer ${selected?.id === p.id
                     ? "bg-gradient-to-r from-pink-600 to-purple-600 text-white"
                     : "hover:bg-white/60 dark:hover:bg-gray-800/60"
-                }`}
+                  }`}
               >
                 <p className="font-semibold text-sm">{p.title}</p>
                 <p className="text-xs opacity-70">{p.difficulty}</p>
@@ -177,6 +173,43 @@ export default function CodingRound() {
         </aside>
 
         <main className="space-y-5">
+          {selected && (
+            <div className="p-5 rounded-3xl bg-white/40 dark:bg-gray-900/40 backdrop-blur-xl border border-white/30 dark:border-gray-700/40">
+              <h2 className="font-bold text-pink-600 mb-2">
+                {selected.title}
+              </h2>
+              <p className="text-sm opacity-80 leading-relaxed">
+                {selected.description}
+              </p>
+            </div>
+          )}
+
+          {selected?.testcases?.length > 0 && (
+            <div className="p-5 rounded-3xl bg-white/40 dark:bg-gray-900/40 backdrop-blur-xl border border-white/30 dark:border-gray-700/40">
+              <h3 className="font-bold text-purple-600 mb-3">
+                Examples
+              </h3>
+
+              <div className="space-y-3 max-h-64 overflow-y-auto hide-scrollbar">
+                {selected.testcases.map((tc, i) => (
+                  <div
+                    key={i}
+                    className="p-4 rounded-2xl bg-black/90 text-green-400 font-mono text-sm hide:scrollbar"
+                  >
+                    <div className="text-pink-400 mb-1 font-semibold">
+                      Example {i + 1}
+                    </div>
+                    <div>
+                      Input: {JSON.stringify(tc.input)}
+                    </div>
+                    <div>
+                      Output: {JSON.stringify(tc.output)}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
 
           <div className="flex flex-wrap gap-3 p-4 rounded-2xl bg-white/40 dark:bg-gray-900/40 backdrop-blur-xl border border-white/30 dark:border-gray-700/40">
             <select value={language} onChange={(e) => setLanguage(e.target.value)} className="px-3 py-2 rounded-lg bg-white/60 dark:bg-gray-900/60">
