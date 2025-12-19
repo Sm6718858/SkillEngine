@@ -89,7 +89,7 @@ const LectureAIChat = ({ open, onClose, lecture, courseTitle }) => {
           </div>
         </div>
 
-        <div className="flex-1 overflow-y-auto px-4 py-4 space-y-4 scrollbar-hide">
+        <div className="flex-1 overflow-y-auto px-4 py-4 space-y-4 scrollbar-hide hide-scrollbar">
           {messages.length === 0 && (
             <div className="text-center text-white/60 mt-10 text-sm">
               Ask doubts related to this lecture only 👇

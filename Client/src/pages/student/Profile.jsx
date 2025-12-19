@@ -64,7 +64,7 @@ const Profile = () => {
         className="
         text-4xl font-extrabold text-center md:text-left
         bg-gradient-to-r from-pink-600 via-purple-600 to-fuchsia-600
-        bg-clip-text text-transparent
+        bg-clip-text text-transparent mt-2 pt-2
       "
       >
         Profile
