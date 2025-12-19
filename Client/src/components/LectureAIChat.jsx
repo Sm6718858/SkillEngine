@@ -106,7 +106,7 @@ const LectureAIChat = ({ open, onClose, lecture, courseTitle }) => {
                     ? "ml-auto bg-gradient-to-r from-pink-500 to-rose-500 text-white shadow-lg"
                     : isCode(m.text)
                     ? "bg-black/70 text-green-300 font-mono backdrop-blur-xl"
-                    : "bg-white/20 dark:bg-zinc-800/50 text-white backdrop-blur-xl"
+                    : "bg-white/30 dark:bg-zinc-600/40 text-black dark:text-white font-bold backdrop-blur-xl"
                 }
               `}
             >

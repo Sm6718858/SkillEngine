@@ -89,22 +89,22 @@ io.on("connection", (socket) => {
     io.to(roomCode).emit("room:activity", "Mode changed");
   });
 
-  socket.on("code:update", ({ roomCode, code }) => {
+  socket.on("code:update", ({ roomCode, code,userName }) => {
     const room = rooms.get(roomCode);
     if (!room) return;
 
     room.code = code;
     socket.to(roomCode).emit("code:sync", code);
-    socket.to(roomCode).emit("room:activity", "Someone is editing code");
+    socket.to(roomCode).emit("room:activity", `${userName} is editing code`);
   });
 
-  socket.on("board:update", ({ roomCode, board }) => {
+  socket.on("board:update", ({ roomCode, board ,userName }) => {
     const room = rooms.get(roomCode);
     if (!room) return;
 
     room.board.push(board);
     socket.to(roomCode).emit("board:sync", board);
-    socket.to(roomCode).emit("room:activity", "Whiteboard updated");
+    socket.to(roomCode).emit("room:activity", `${userName} is updating Whiteboard `);
   });
 
   socket.on("code:run", ({ roomCode, output }) => {

@@ -3,6 +3,9 @@ import { io } from "socket.io-client";
 import Editor from "@monaco-editor/react";
 import { useCreateRoomMutation } from "@/features/groupStudyApi";
 import { useSubmitSolutionMutation } from "@/features/codingApi";
+import { useSelector } from "react-redux";
+import { useLoadUserQuery } from "@/features/authApi";
+
 
 const socket = io(import.meta.env.VITE_API_BASE_URL, {
     withCredentials: true,
@@ -33,6 +36,12 @@ const GroupStudy = () => {
     const [users, setUsers] = useState([]);
     const [toast, setToast] = useState(null);
 
+    useLoadUserQuery();
+
+    const { user } = useSelector((state) => state.auth);
+    const USER_NAME = user?.name || user?.username || "Anonymous";
+
+
     const showToast = (msg) => {
         setToast(msg);
         setTimeout(() => setToast(null), 2500);
@@ -56,9 +65,9 @@ const GroupStudy = () => {
     const [submitSolution, { isLoading: running }] =
         useSubmitSolutionMutation();
 
-    const USER_NAME = useRef(
-        `User-${Math.random().toString(36).slice(2, 6)}`
-    ).current;
+    // const USER_NAME = useRef(
+    //     `User-${Math.random().toString(36).slice(2, 6)}`
+    // ).current;
 
     // VOICE
     const startVoice = async () => {
@@ -196,15 +205,32 @@ const GroupStudy = () => {
         return () => socket.off();
     }, []);
 
+    const setupCanvas = () => {
+        const canvas = canvasRef.current;
+        const ctx = canvas.getContext("2d");
+
+        const rect = canvas.getBoundingClientRect();
+        const dpr = window.devicePixelRatio || 1;
+
+        canvas.width = rect.width * dpr;
+        canvas.height = rect.height * dpr;
+
+        ctx.scale(dpr, dpr);
+    };
+
+
     //    WHITEBOARD DRAW 
     useEffect(() => {
         if (mode !== "whiteboard") return;
+
+        setupCanvas();
+
         const ctx = canvasRef.current.getContext("2d");
-        ctx.clearRect(0, 0, 900, 400);
+        ctx.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height);
 
         strokes.forEach((s) => {
             ctx.strokeStyle = s.tool === "eraser" ? "#fff" : "#000";
-            ctx.lineWidth = s.tool === "eraser" ? 20 : 2;
+            ctx.lineWidth = s.tool === "eraser" ? 10 : 2;
             ctx.beginPath();
             ctx.moveTo(s.prevX, s.prevY);
             ctx.lineTo(s.x, s.y);
@@ -212,33 +238,41 @@ const GroupStudy = () => {
         });
     }, [strokes, mode]);
 
+
     const startDraw = (e) => {
         drawing.current = true;
-        const r = canvasRef.current.getBoundingClientRect();
-        canvasRef.current.prevX = e.clientX - r.left;
-        canvasRef.current.prevY = e.clientY - r.top;
+        const canvas = canvasRef.current;
+        const rect = canvas.getBoundingClientRect();
+
+        canvas.prevX = (e.clientX - rect.left);
+        canvas.prevY = (e.clientY - rect.top);
     };
+
 
     const draw = (e) => {
         if (!drawing.current) return;
-        const r = canvasRef.current.getBoundingClientRect();
-        const x = e.clientX - r.left;
-        const y = e.clientY - r.top;
+
+        const canvas = canvasRef.current;
+        const rect = canvas.getBoundingClientRect();
+
+        const x = (e.clientX - rect.left);
+        const y = (e.clientY - rect.top);
 
         const stroke = {
-            prevX: canvasRef.current.prevX,
-            prevY: canvasRef.current.prevY,
+            prevX: canvas.prevX,
+            prevY: canvas.prevY,
             x,
             y,
             tool,
         };
 
         setStrokes((p) => [...p, stroke]);
-        socket.emit("board:update", { roomCode, board: stroke });
+        socket.emit("board:update", { roomCode, board: stroke ,userName: USER_NAME});
 
-        canvasRef.current.prevX = x;
-        canvasRef.current.prevY = y;
+        canvas.prevX = x;
+        canvas.prevY = y;
     };
+
 
     const stopDraw = () => (drawing.current = false);
 
@@ -348,7 +382,7 @@ const GroupStudy = () => {
                                 value={code}
                                 onChange={(v) => {
                                     setCode(v);
-                                    socket.emit("code:update", { roomCode, code: v });
+                                    socket.emit("code:update", { roomCode, code: v , userName: USER_NAME});
                                 }}
                             />
 
@@ -416,14 +450,13 @@ const GroupStudy = () => {
 
                             <canvas
                                 ref={canvasRef}
-                                width={900}
-                                height={400}
                                 onMouseDown={startDraw}
                                 onMouseMove={draw}
                                 onMouseUp={stopDraw}
                                 onMouseLeave={stopDraw}
-                                className="mt-4 border rounded-xl bg-white w-full max-w-full"
+                                className="mt-4 border rounded-xl bg-white w-full h-[400px]"
                             />
+
                         </>
                     )}
                 </>
