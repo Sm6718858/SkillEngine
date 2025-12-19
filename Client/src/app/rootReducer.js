@@ -7,6 +7,7 @@ import { courseProgressApi } from "@/features/courseProgressApi";
 import { codingApi } from "@/features/codingApi";
 import { interviewApi } from "@/features/interviewApi";
 import { groupStudyApi } from "@/features/groupStudyApi";
+import { aiChatApi } from "@/features/aiChatApi";
 
 const rootReducer = combineReducers({
     [authApi.reducerPath]: authApi.reducer,
@@ -16,6 +17,7 @@ const rootReducer = combineReducers({
     [codingApi.reducerPath]:codingApi.reducer,
     [interviewApi.reducerPath]:interviewApi.reducer,
     [groupStudyApi.reducerPath]:groupStudyApi.reducer,
+    [aiChatApi.reducerPath]:aiChatApi.reducer,
     auth:authReducer
 })
 

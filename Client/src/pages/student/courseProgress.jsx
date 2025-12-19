@@ -1,3 +1,4 @@
+import LectureAIChat from "@/components/LectureAIChat";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardTitle } from "@/components/ui/card";
@@ -20,6 +21,7 @@ import { toast } from "sonner";
 
 const CourseProgress = () => {
   const { courseId } = useParams();
+  const [openAI, setOpenAI] = useState(false);
 
   const { data, isLoading, isError, refetch } =
     useGetCourseProgressQuery(courseId);
@@ -115,99 +117,119 @@ const CourseProgress = () => {
         </Button>
       </div>
 
-      <div className="flex flex-col md:flex-row gap-6">
-        
-        <div
-          className="
-            flex-1 md:w-3/5 
-            bg-white/70 dark:bg-white/10
-            backdrop-blur-xl
-            rounded-2xl p-4 shadow-xl
-            border border-pink-300/40 dark:border-pink-700/40
-          "
-        >
-          <video
-            src={activeLecture?.videoUrl}
-            controls
-            onPlay={() => handleVideoPlay(activeLecture._id)}
-            className="w-full rounded-xl shadow-lg"
-          />
+      <div className="flex flex-col lg:flex-row gap-6">
 
-          <h3
-            className="
-              mt-4 text-xl font-semibold
-              text-gray-800 dark:text-pink-200
-            "
+  <div
+    className="
+      flex-1 lg:w-3/5
+      bg-white/80 dark:bg-white/10
+      backdrop-blur-xl
+      rounded-3xl p-5 shadow-2xl
+      border border-pink-300/30 dark:border-pink-700/40
+      flex flex-col
+    "
+  >
+    <div className="relative w-full aspect-video rounded-2xl overflow-hidden shadow-lg">
+      <video
+        src={activeLecture?.videoUrl}
+        controls
+        onPlay={() => handleVideoPlay(activeLecture._id)}
+        className="w-full h-full object-cover"
+      />
+    </div>
+
+    <div className="mt-5 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+      <h3 className="text-lg sm:text-xl font-semibold text-gray-800 dark:text-pink-200 leading-snug">
+        Lecture{" "}
+        {courseDetails.lectures.findIndex(
+          (l) => l._id === activeLecture._id
+        ) + 1}
+        <span className="text-pink-500 mx-1">•</span>
+        {activeLecture.lectureTitle}
+      </h3>
+
+
+        <Button onClick={() => setOpenAI(true)} className="rounded-xl bg-gradient-to-r from-pink-500 to-purple-600 text-white shadow-md hover:scale-105 transition">
+  Ask with AI ✨
+</Button>
+
+<LectureAIChat
+  open={openAI}
+  onClose={() => setOpenAI(false)}
+  lecture={activeLecture}
+  courseTitle={courseDetails.title}
+/>
+
+
+
+    </div>
+  </div>
+
+  <div
+    className="
+      w-full lg:w-2/5
+      bg-white/80 dark:bg-white/10
+      backdrop-blur-xl
+      rounded-3xl shadow-2xl p-5
+      border border-pink-300/30 dark:border-pink-700/40
+      flex flex-col
+    "
+  >
+    <h2
+      className="
+        text-2xl font-bold mb-4
+        bg-gradient-to-r from-pink-600 to-purple-600
+        bg-clip-text text-transparent
+      "
+    >
+      Course Lectures
+    </h2>
+
+    <div className="flex-1 max-h-[65vh] overflow-y-auto space-y-3 pr-2">
+      {courseDetails?.lectures?.map((lec) => {
+        const isActive = lec._id === activeLecture._id;
+
+        return (
+          <Card
+            key={lec._id}
+            onClick={() => handleSelectLecture(lec)}
+            className={`
+              cursor-pointer rounded-2xl transition-all
+              border border-pink-200/40 dark:border-pink-700/40
+              ${
+                isActive
+                  ? "bg-pink-100/70 dark:bg-pink-900/40 shadow-xl scale-[1.02]"
+                  : "bg-white/60 dark:bg-white/5 hover:bg-pink-100/40 dark:hover:bg-pink-900/30"
+              }
+            `}
           >
-            Lecture {courseDetails.lectures.findIndex(l => l._id === activeLecture._id) + 1} —{" "}
-            {activeLecture.lectureTitle}
-          </h3>
-        </div>
+            <CardContent className="p-4 flex items-center justify-between gap-3">
+              <div className="flex items-center gap-3">
+                {isLectureCompleted(lec._id) ? (
+                  <CheckCircle2 className="text-green-500 shrink-0" size={22} />
+                ) : (
+                  <CirclePlay className="text-pink-500 shrink-0" size={22} />
+                )}
 
-        <div
-          className="
-            w-full md:w-2/5 
-            bg-white/70 dark:bg-white/10 
-            rounded-2xl shadow-xl p-5
-            border border-pink-300/40 dark:border-pink-700/40
-            backdrop-blur-xl
-          "
-        >
-          <h2
-            className="
-              font-bold text-2xl mb-4
-              bg-gradient-to-r from-pink-600 to-purple-600
-              bg-clip-text text-transparent
-            "
-          >
-            Lectures
-          </h2>
+                <CardTitle className="text-sm sm:text-base font-medium dark:text-pink-200 line-clamp-2">
+                  {lec.lectureTitle}
+                </CardTitle>
+              </div>
 
-          <div className="max-h-[65vh] overflow-y-auto space-y-3 pr-2">
-            {courseDetails?.lectures?.map((lec) => (
-              <Card
-                key={lec._id}
-                className={`
-                  cursor-pointer rounded-xl transition-all
-                  border border-pink-200/40 dark:border-pink-700/40
-                  ${
-                    lec._id === activeLecture._id
-                      ? "bg-pink-100/60 dark:bg-pink-900/40 shadow-lg"
-                      : "bg-white/60 dark:bg-white/5 hover:bg-pink-100/40 dark:hover:bg-pink-900/30"
-                  }
-                `}
-                onClick={() => handleSelectLecture(lec)}
-              >
-                <CardContent className="flex items-center justify-between p-4">
-                  <div className="flex items-center gap-3">
-                    {isLectureCompleted(lec._id) ? (
-                      <CheckCircle2 className="text-green-500" size={24} />
-                    ) : (
-                      <CirclePlay className="text-pink-500" size={24} />
-                    )}
+              {isLectureCompleted(lec._id) && (
+                <Badge className="rounded-full bg-green-200 text-green-700 dark:bg-green-900/40 dark:text-green-300 px-3 py-1 text-xs">
+                  Done
+                </Badge>
+              )}
+            </CardContent>
+          </Card>
+        );
+      })}
+    </div>
+  </div>
 
-                    <CardTitle className="text-base font-medium dark:text-pink-200">
-                      {lec.lectureTitle}
-                    </CardTitle>
-                  </div>
+</div>
 
-                  {isLectureCompleted(lec._id) && (
-                    <Badge
-                      className="
-                        bg-green-200 text-green-700 dark:bg-green-900/40 dark:text-green-300
-                        rounded-full px-3 py-1
-                      "
-                    >
-                      Done
-                    </Badge>
-                  )}
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </div>
-
-      </div>
     </div>
   );
 };

@@ -14,6 +14,7 @@ import submissionRoute from "./Routes/submissionRoutes.js";
 import aiCompilerRoutes from "./Routes/aiCompiler.js";
 import interviewRoutes from "./Routes/interview.js";
 import groupStudyRoutes, { rooms } from "./Routes/groupStudy.js";
+import aiChatRoutes from './Routes/aiChatRoutes.js'
 
 dotenv.config();
 connectDB();
@@ -47,6 +48,7 @@ app.use("/api/coding", submissionRoute);
 app.use("/api/compiler-ai", aiCompilerRoutes);
 app.use("/api", interviewRoutes);
 app.use("/api/group-study", groupStudyRoutes);
+app.use("/api/ai", aiChatRoutes);
 
 
 io.on("connection", (socket) => {
