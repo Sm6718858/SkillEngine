@@ -6,7 +6,6 @@ import { useGetPublicProfileQuery } from "@/features/authApi";
 import { useState } from "react";
 
 
-
 const PublicProfile = () => {
   const { userId } = useParams();
   const { data, isLoading } = useGetPublicProfileQuery(userId);

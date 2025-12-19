@@ -3,7 +3,6 @@ import { User } from "../../Models/userModel.js";
 
 const router = express.Router();
 
-/* ---------- PUBLIC PROFILE ---------- */
 router.get("/:id", async (req, res) => {
   try {
     const user = await User.findById(req.params.id)
@@ -14,7 +13,6 @@ router.get("/:id", async (req, res) => {
       })
       .lean();
 
-    // console.log("PUBLIC USER:", user);
 
     if (!user) {
       return res.status(404).json({
