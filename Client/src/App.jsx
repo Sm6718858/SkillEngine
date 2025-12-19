@@ -24,6 +24,7 @@ import InterviewPage from "./pages/Placement/interviewPage";
 import Aptitude from "./pages/Placement/aptitude";
 import CodingRound from "./pages/Placement/codingRound";
 import GroupStudy from './pages/student/groupStudy';
+import PublicProfile from "./pages/student/PublicProfile";
 
 function App() {
   // const showLogin = false; 
@@ -38,6 +39,11 @@ function App() {
             <Courses />
           </>
         },
+        {
+          path: '/u/:userId',
+          element: <PublicProfile />
+        },
+
         {
           path: '/login', element: <AuthenticatedUser>
             <Login />
@@ -54,16 +60,16 @@ function App() {
           </ProtectedRoute>
         },
         {
-          path: '/groupStudy',element: <ProtectedRoute><GroupStudy/></ProtectedRoute>
+          path: '/groupStudy', element: <ProtectedRoute><GroupStudy /></ProtectedRoute>
         },
         {
-          path: '/interview', element: <ProtectedRoute><InterviewPage/></ProtectedRoute>
+          path: '/interview', element: <ProtectedRoute><InterviewPage /></ProtectedRoute>
         },
         {
-          path: '/aptitude', element: <ProtectedRoute><Aptitude/></ProtectedRoute>
+          path: '/aptitude', element: <ProtectedRoute><Aptitude /></ProtectedRoute>
         },
         {
-          path: '/codingRound', element: <ProtectedRoute><CodingRound/></ProtectedRoute>
+          path: '/codingRound', element: <ProtectedRoute><CodingRound /></ProtectedRoute>
         },
         {
           path: '/course/search', element: <ProtectedRoute>

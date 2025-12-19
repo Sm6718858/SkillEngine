@@ -24,7 +24,7 @@ export const authApi = createApi({
                 url: 'login',
                 method: 'POST',
                 body: userInput,
-                 credentials: 'include',
+                credentials: 'include',
             }),
             invalidatesTags: ["User"],
             async onQueryStarted(arg, { dispatch, queryFulfilled }) {
@@ -67,7 +67,7 @@ export const authApi = createApi({
             }),
             invalidatesTags: ["User"]
         }),
-        
+
         saveQuizResult: builder.mutation({
             query: (data) => ({
                 url: "quiz/save-result",
@@ -76,8 +76,12 @@ export const authApi = createApi({
                 credentials: "include",
             }),
         }),
+
+        getPublicProfile: builder.query({
+            query: (userId) => `public/${userId}`,
+        }),
     }),
 });
 
 
-export const { useRegisterUserMutation, useLoginUserMutation, useLoadUserQuery, useUpdateUserMutation, useLogoutUserMutation, useSaveQuizResultMutation } = authApi;
+export const { useRegisterUserMutation, useLoginUserMutation, useLoadUserQuery, useUpdateUserMutation, useLogoutUserMutation, useSaveQuizResultMutation,useGetPublicProfileQuery } = authApi;

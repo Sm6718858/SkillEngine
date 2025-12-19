@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
+import { QRCodeCanvas } from "qrcode.react";
+import { Link } from "react-router-dom";
 import {
   Dialog,
   DialogContent,
@@ -24,6 +26,10 @@ const Profile = () => {
   const [name, setName] = useState("");
   const [profilePhoto, setProfilePhoto] = useState(null);
   const user = data?.user ?? {};
+
+
+  const publicProfileUrl = `${window.location.origin}/u/${user._id}`;
+
 
   useEffect(() => {
     if (user?.name) setName(user.name);
@@ -104,6 +110,24 @@ const Profile = () => {
             "
             />
           </div>
+          <div className="flex flex-col items-center gap-3 mt-4">
+            <QRCodeCanvas
+              value={publicProfileUrl}
+              size={120}
+              bgColor="#ffffff"
+              fgColor="#000000"
+              level="H"
+            />
+
+            <a
+              href={publicProfileUrl}
+              target="_blank"
+              className="text-sm text-pink-600 hover:underline break-all"
+            >
+              {publicProfileUrl}
+            </a>
+          </div>
+
 
           <p className="text-gray-500 dark:text-gray-400 text-sm mt-2">
             Joined:{" "}
