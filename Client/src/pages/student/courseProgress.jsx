@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { toast } from "sonner";
-
+import { X } from "lucide-react";
 import LectureAIChat from "@/components/LectureAIChat";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -15,16 +15,20 @@ import {
 } from "@/features/courseProgressApi";
 
 import {
-  CheckCircle,
   CheckCircle2,
   CirclePlay,
+  StickyNote,
+  Trash2,
 } from "lucide-react";
 
 const CourseProgress = () => {
   const { courseId } = useParams();
+
   const [openAI, setOpenAI] = useState(false);
+  const [openNotes, setOpenNotes] = useState(false);
   const [currentLecture, setCurrentLecture] = useState(null);
   const [viewedLectures, setViewedLectures] = useState({});
+  const [noteText, setNoteText] = useState("");
 
   const { data, isLoading, isError, refetch } =
     useGetCourseProgressQuery(courseId);
@@ -36,9 +40,10 @@ const CourseProgress = () => {
     useInCompleteCourseMutation();
 
   useEffect(() => {
-    document.body.style.overflow = openAI ? "hidden" : "auto";
+    document.body.style.overflow =
+      openAI || openNotes ? "hidden" : "auto";
     return () => (document.body.style.overflow = "auto");
-  }, [openAI]);
+  }, [openAI, openNotes]);
 
   useEffect(() => {
     if (completed && completeData) {
@@ -57,8 +62,30 @@ const CourseProgress = () => {
     return <p className="p-6 text-center text-red-500">Failed to load</p>;
 
   const { courseDetails, progress, completed: isCourseDone } = data.data;
+
   const activeLecture =
     currentLecture || courseDetails.lectures?.[0];
+
+  const noteKey =
+    activeLecture &&
+    `notes_${courseId}_${activeLecture._id}`;
+
+  useEffect(() => {
+    if (!activeLecture) return;
+    const saved = localStorage.getItem(noteKey);
+    setNoteText(saved || "");
+  }, [activeLecture]);
+
+  const saveNotes = (value) => {
+    setNoteText(value);
+    localStorage.setItem(noteKey, value);
+  };
+
+  const deleteNotes = () => {
+    localStorage.removeItem(noteKey);
+    setNoteText("");
+    toast.success("Notes deleted");
+  };
 
   const isLectureCompleted = (id) =>
     progress.some((p) => p.lectureId === id && p.viewed);
@@ -94,26 +121,17 @@ const CourseProgress = () => {
               ? inCompleteCourse(courseId)
               : completeCourse(courseId)
           }
-          className="
-            rounded-xl px-5
-            border border-pink-400
-            text-pink-600
-            hover:bg-pink-100
-            cursor-pointer
-          "
           variant="outline"
+          className="rounded-xl border-pink-400 text-pink-600"
         >
           {isCourseDone ? "Completed ✅" : "Mark as completed"}
         </Button>
       </div>
 
       <div className="flex flex-col lg:flex-row gap-6">
-
         <div className="
-          flex-1 lg:w-3/5
-          bg-white/80 dark:bg-white/10
-          backdrop-blur-xl
-          rounded-3xl p-5 shadow-2xl
+          flex-1 bg-white/80 dark:bg-white/10
+          backdrop-blur-xl rounded-3xl p-5 shadow-2xl
           border border-pink-300/30
         ">
           <div className="aspect-video rounded-2xl overflow-hidden shadow-lg">
@@ -130,26 +148,40 @@ const CourseProgress = () => {
               {activeLecture.lectureTitle}
             </h3>
 
-            <Button
-              onClick={() => setOpenAI(true)}
-              className="
-                w-full sm:w-auto
-                bg-gradient-to-r from-pink-500 to-purple-600
-                text-white rounded-xl
-                py-3 sm:py-2
-              "
-            >
-              Ask with AI
-            </Button>
+            <div className="flex gap-3">
+              <Button
+                onClick={() => {
+                  setOpenAI(true);
+                  setOpenNotes(false);
+                }}
+                className="
+                  bg-gradient-to-r from-pink-500 to-purple-600
+                  text-white rounded-xl
+                "
+              >
+                Ask with AI
+              </Button>
+
+              <Button
+                onClick={() => {
+                  setOpenNotes(true);
+                  setOpenAI(false);
+                }}
+                variant="outline"
+                className="rounded-xl cursor-pointer  bg-gradient-to-r from-purple-700 to-pink-400
+                  text-white rounded-xl"
+              >
+                <StickyNote className="h-4 w-4 mr-2" />
+                Quick Notes
+              </Button>
+            </div>
           </div>
         </div>
 
-        {!openAI && (
+        {!openAI && !openNotes && (
           <div className="
-            w-full lg:w-2/5
-            bg-white/80 dark:bg-white/10
-            backdrop-blur-xl
-            rounded-3xl shadow-2xl p-5
+            w-full lg:w-2/5 bg-white/80 dark:bg-white/10
+            backdrop-blur-xl rounded-3xl shadow-2xl p-5
             border border-pink-300/30
           ">
             <h2 className="
@@ -168,7 +200,7 @@ const CourseProgress = () => {
                     key={lec._id}
                     onClick={() => setCurrentLecture(lec)}
                     className={`
-                      cursor-pointer rounded-2xl transition rounded-2xl
+                      cursor-pointer rounded-2xl transition
                       ${active
                         ? "bg-pink-400 shadow-xl scale-96"
                         : "hover:bg-purple-400"}
@@ -199,6 +231,59 @@ const CourseProgress = () => {
           </div>
         )}
       </div>
+
+      {openNotes && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center">
+          <div
+            onClick={() => setOpenNotes(false)}
+            className="absolute inset-0 bg-black/40 backdrop-blur-sm"
+          />
+
+          <div className="
+            relative w-[95%] sm:w-[520px] h-[80vh]
+            bg-white/80 dark:bg-white/10
+            backdrop-blur-xl
+            rounded-3xl shadow-2xl
+            border border-pink-300/30
+            p-5
+          ">
+            <div className="flex justify-between items-center mb-4">
+              <h2 className="
+                text-xl font-bold
+                bg-gradient-to-r from-pink-600 to-purple-600
+                bg-clip-text text-transparent
+              ">
+                Quick Notes
+              </h2>
+
+              <div className="flex gap-3 items-center">
+                <Trash2
+                  onClick={deleteNotes}
+                  className="cursor-pointer text-red-500"
+                />
+                <X
+              className="cursor-pointer text-white/70 hover:text-white"
+              onClick={()=> setOpenNotes(false)}
+            />
+              </div>
+            </div>
+
+            <textarea
+              value={noteText}
+              onChange={(e) => saveNotes(e.target.value)}
+              placeholder="Write notes while watching lecture..."
+              className="
+                w-full h-[calc(100%-60px)]
+                rounded-xl p-3
+                bg-white/60 dark:bg-black/30
+                border border-pink-300/30
+                resize-none focus:outline-none
+                hide-scrollbar
+              "
+            />
+          </div>
+        </div>
+      )}
 
       <LectureAIChat
         open={openAI}
