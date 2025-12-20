@@ -239,24 +239,34 @@ const GroupStudy = () => {
     }, [strokes, mode]);
 
 
-    const startDraw = (e) => {
-        drawing.current = true;
+    const getPos = (e) => {
         const canvas = canvasRef.current;
         const rect = canvas.getBoundingClientRect();
 
-        canvas.prevX = (e.clientX - rect.left);
-        canvas.prevY = (e.clientY - rect.top);
+        const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+        const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+
+        return {
+            x: clientX - rect.left,
+            y: clientY - rect.top,
+        };
     };
+
+
+    const startDraw = (e) => {
+        drawing.current = true;
+        const { x, y } = getPos(e);
+        canvasRef.current.prevX = x;
+        canvasRef.current.prevY = y;
+    };
+
 
 
     const draw = (e) => {
         if (!drawing.current) return;
 
+        const { x, y } = getPos(e);
         const canvas = canvasRef.current;
-        const rect = canvas.getBoundingClientRect();
-
-        const x = (e.clientX - rect.left);
-        const y = (e.clientY - rect.top);
 
         const stroke = {
             prevX: canvas.prevX,
@@ -267,7 +277,7 @@ const GroupStudy = () => {
         };
 
         setStrokes((p) => [...p, stroke]);
-        socket.emit("board:update", { roomCode, board: stroke ,userName: USER_NAME});
+        socket.emit("board:update", { roomCode, board: stroke, userName: USER_NAME });
 
         canvas.prevX = x;
         canvas.prevY = y;
@@ -382,7 +392,7 @@ const GroupStudy = () => {
                                 value={code}
                                 onChange={(v) => {
                                     setCode(v);
-                                    socket.emit("code:update", { roomCode, code: v , userName: USER_NAME});
+                                    socket.emit("code:update", { roomCode, code: v, userName: USER_NAME });
                                 }}
                             />
 
@@ -454,8 +464,14 @@ const GroupStudy = () => {
                                 onMouseMove={draw}
                                 onMouseUp={stopDraw}
                                 onMouseLeave={stopDraw}
-                                className="mt-4 border rounded-xl bg-white w-full h-[400px]"
+
+                                onTouchStart={startDraw}
+                                onTouchMove={draw}
+                                onTouchEnd={stopDraw}
+
+                                className="mt-4 border rounded-xl bg-white w-full h-[400px] touch-none"
                             />
+
 
                         </>
                     )}
