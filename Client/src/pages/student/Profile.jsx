@@ -99,7 +99,6 @@ const Profile = () => {
               : "N/A"}
           </p>
 
-          {user.role !== "instructor" && (
             <div className="w-full mt-4">
               <button
                 onClick={() => setShowShare((p) => !p)}
@@ -134,7 +133,7 @@ const Profile = () => {
                 </div>
               )}
             </div>
-          )}
+          
         </div>
 
         <div className="flex-1 space-y-8">

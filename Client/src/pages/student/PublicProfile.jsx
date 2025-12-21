@@ -5,6 +5,7 @@ import {
   BookOpen,
   ClipboardList,
   ChevronDown,
+  Mic,
 } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useGetPublicProfileQuery } from "@/features/authApi";
@@ -23,6 +24,8 @@ const PublicProfile = () => {
   }
 
   const user = data?.user;
+  console.log(user.name);
+  console.log(user.interviewAttempts)
 
   if (!user) {
     return (
@@ -44,7 +47,6 @@ const PublicProfile = () => {
           animate-fadeIn
         "
       >
-        {/* ---------- PROFILE HEADER ---------- */}
         <div className="flex flex-col items-center text-center gap-4">
           <Avatar className="h-32 w-32 ring-4 ring-pink-500/40 shadow-xl">
             <AvatarImage src={user.photoUrl} />
@@ -61,6 +63,7 @@ const PublicProfile = () => {
             "
           >
             {user.name}
+           
           </h1>
 
           <p className="text-gray-500">{user.email}</p>
@@ -80,7 +83,44 @@ const PublicProfile = () => {
           </p>
         </div>
 
-        {/* ---------- QUIZ PROGRESS ---------- */}
+        <div className="mt-12">
+          <div
+            className="
+      rounded-2xl
+      bg-white/70 dark:bg-gray-900/70
+      backdrop-blur-xl
+      border border-pink-300/40 dark:border-pink-800/40
+      p-6
+      shadow-md hover:shadow-xl transition
+      flex items-center justify-between
+    "
+          >
+            <div className="flex items-center gap-4">
+              <div className="p-4 rounded-xl bg-gradient-to-r from-pink-500 to-purple-500 text-white shadow-lg">
+                <Mic />
+              </div>
+
+              <div>
+                <p className="text-sm text-gray-500">AI Interview Attempts</p>
+                <p className="text-3xl font-extrabold text-pink-600">
+                  {user.interviewAttempts ?? 0}
+                </p>
+              </div>
+            </div>
+
+            <span
+              className="
+        px-4 py-1 text-sm font-semibold rounded-full
+        bg-gradient-to-r from-pink-500 to-purple-500
+        text-white
+      "
+            >
+              Total
+            </span>
+          </div>
+        </div>
+
+
         <div className="mt-14">
           <button
             onClick={() => setShowQuiz((p) => !p)}
@@ -102,9 +142,8 @@ const PublicProfile = () => {
             </div>
 
             <ChevronDown
-              className={`h-5 w-5 text-pink-600 transition-transform duration-300 ${
-                showQuiz ? "rotate-180" : ""
-              }`}
+              className={`h-5 w-5 text-pink-600 transition-transform duration-300 ${showQuiz ? "rotate-180" : ""
+                }`}
             />
           </button>
 
@@ -164,7 +203,6 @@ const PublicProfile = () => {
           )}
         </div>
 
-        {/* ---------- ENROLLED COURSES ---------- */}
         <div className="mt-16">
           <h2 className="text-3xl font-bold mb-6 flex items-center gap-2">
             <BookOpen className="text-pink-600" />

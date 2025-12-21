@@ -1,4 +1,4 @@
-import { School, Video, Calculator, Code2, Menu, BookOpen, User, LogOut, LayoutDashboard } from "lucide-react";
+import { School, Video, Calculator, Code2, Menu, BookOpen, User, LogOut, LayoutDashboard, SquareKanban } from "lucide-react";
 import React, { useEffect } from "react";
 import { Button } from "@/components/ui/button";
 
@@ -294,9 +294,14 @@ const MobileNav = ({ user }) => {
               <MobileLink to="/groupStudy" icon={<User size={20} />}>Group-Study</MobileLink>
 
               {user.role === "instructor" && (
-                <MobileLink to="/admin/dashboard" icon={<LayoutDashboard size={20} />}>
-                  Dashboard
-                </MobileLink>
+                <>
+                  <MobileLink to="/admin/dashboard" icon={<LayoutDashboard size={20} />}>
+                    Dashboard
+                  </MobileLink>
+                  <MobileLink to="/admin/course" icon={<SquareKanban size={20} />}>
+                    Course
+                  </MobileLink>
+                </>
               )}
 
               <Button

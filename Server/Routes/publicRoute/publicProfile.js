@@ -6,13 +6,12 @@ const router = express.Router();
 router.get("/:id", async (req, res) => {
   try {
     const user = await User.findById(req.params.id)
-      .select("name photoUrl role email enrolledCourses createdAt quizResults ")
+      .select("name photoUrl role email enrolledCourses createdAt quizResults interviewAttempts")
       .populate({
         path: "enrolledCourses",
         select: "courseTitle courseThumbnail courseLevel category",
       })
       .lean();
-
 
     if (!user) {
       return res.status(404).json({

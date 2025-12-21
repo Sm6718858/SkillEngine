@@ -1,35 +1,39 @@
 import mongoose from "mongoose";
 
 const userSchema = new mongoose.Schema({
-    name:{
-        type:String,
-        required:true,
+    name: {
+        type: String,
+        required: true,
     },
-    email:{
-        type:String,
-        required:true,
-        unique:true,
+    email: {
+        type: String,
+        required: true,
+        unique: true,
     },
-    password:{
-        type:String,
-        required:true,
+    password: {
+        type: String,
+        required: true,
     },
-    role:{
-        type:String,
-        enum:['student','instructor'],
-        default:'student',
+    role: {
+        type: String,
+        enum: ['student', 'instructor'],
+        default: 'student',
     },
-    enrolledCourses:[
+    enrolledCourses: [
         {
-            type:mongoose.Schema.Types.ObjectId,
-            ref:'Course',
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Course',
         }
     ],
-    photoUrl:{
-        type:String,
-        default:'',
+    photoUrl: {
+        type: String,
+        default: '',
     },
-
+    
+    interviewAttempts: {
+        type: Number,
+        default: 0
+    },
     quizResults: [
         {
             date: { type: Date, default: Date.now },
@@ -45,11 +49,11 @@ const userSchema = new mongoose.Schema({
             totalQuestions: Number,
             notAttempted: Number
         }
-    ]
+    ],
 
 },
-{
-    timestamps:true,    
-});
+    {
+        timestamps: true,
+    });
 
-export const User = mongoose.model('User',userSchema);
+export const User = mongoose.model('User', userSchema);

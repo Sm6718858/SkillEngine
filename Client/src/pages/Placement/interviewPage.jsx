@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Mic, MicOff, PhoneOff } from "lucide-react";
 import { useAskVoiceInterviewMutation } from "@/features/interviewApi";
+import { useSaveInterviewAttemptMutation } from "@/features/authApi";
 
 const INTERVIEW_TYPES = [
   "Frontend (React)",
@@ -25,6 +26,7 @@ const VoiceInterview = () => {
   const [selectedVoice, setSelectedVoice] = useState(null);
 
   const [askInterview, { isLoading }] = useAskVoiceInterviewMutation();
+  const [saveInterviewAttempt] = useSaveInterviewAttemptMutation();
 
   useEffect(() => {
     if (!started) return;
@@ -102,6 +104,7 @@ const VoiceInterview = () => {
   }, [askInterview, domain, tone, selectedVoice]);
 
   const startInterview = () => {
+    saveInterviewAttempt();
     const firstQ =
       tone === "strict"
         ? `This is a ${domain} interview. Introduce yourself briefly.`

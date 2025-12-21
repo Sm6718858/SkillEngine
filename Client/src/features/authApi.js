@@ -75,6 +75,17 @@ export const authApi = createApi({
                 body: data,
                 credentials: "include",
             }),
+            invalidatesTags: ["User"]
+
+        }),
+        saveInterviewAttempt: builder.mutation({
+            query: () => ({
+                url: "interview-attempt",
+                method: "POST",
+                credentials: "include",
+            }),
+            invalidatesTags: ["User"]
+
         }),
 
         getPublicProfile: builder.query({
@@ -84,4 +95,4 @@ export const authApi = createApi({
 });
 
 
-export const { useRegisterUserMutation, useLoginUserMutation, useLoadUserQuery, useUpdateUserMutation, useLogoutUserMutation, useSaveQuizResultMutation,useGetPublicProfileQuery } = authApi;
+export const { useRegisterUserMutation, useLoginUserMutation, useLoadUserQuery, useUpdateUserMutation, useLogoutUserMutation, useSaveQuizResultMutation, useGetPublicProfileQuery ,useSaveInterviewAttemptMutation} = authApi;
