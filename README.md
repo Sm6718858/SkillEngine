@@ -206,4 +206,13 @@ mail- sm6718858@gmail.com
 SkillEngine is built for people who believe  
 **learning should feel alive, collaborative, and intelligent**.
 
-> ⚙️ Engine On. Doubts Off. 
+> ⚙️ Engine On. Doubts Off.
+
+
+
+## License
+This project is licensed under the GNU General Public License v3.0 (GPL-3.0).
+
+⚠️ Any reuse, modification, or submission of this code
+requires the derived work to also be open-sourced
+under the same license.
