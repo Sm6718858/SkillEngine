@@ -153,6 +153,13 @@ A realistic interview preparation system:
 - Smooth checkout experience
 - Secure & scalable transactions
 
+  <img width="300" height="300" src="https://github.com/user-attachments/assets/aa8d71bb-8136-4d7e-a634-28db21a6164d" /> <img width="300" height="300" alt="Screenshot 2025-12-22 194812" src="https://github.com/user-attachments/assets/7a593983-b33f-4ade-924d-67afbdcabc6d" /> <img width="300" height="300" alt="Screenshot 2025-12-22 194906" src="https://github.com/user-attachments/assets/983d4057-14d2-49b1-89da-da79e5d3380d" /> <img width="300" height="300" alt="Screenshot 2025-12-22 195002" src="https://github.com/user-attachments/assets/ba9bc03f-d28a-46b0-8bdc-db123f8c09fe" /> <img width="300" height="300" alt="Screenshot 2025-12-22 195014" src="https://github.com/user-attachments/assets/0b61bfa5-6766-4bbb-93e3-d9bc18c0e5d8" /> <img width="300" height="300" alt="Screenshot 2025-12-22 195041" src="https://github.com/user-attachments/assets/5022afc9-7eae-453b-b760-35bde007e5dc" /> <img width="300" height="300" alt="Screenshot 2025-12-22 195156" src="https://github.com/user-attachments/assets/fa4bb7c5-55ed-4a5e-91c3-12dc6a93d698" /> <img width="300" height="300" alt="Screenshot 2025-12-22 195240" src="https://github.com/user-attachments/assets/e15bfaeb-1a2f-4539-8334-e3eb4570812e" />
+
+
+
+
+
+
 ---
 
 ## 🧱 Tech Stack
