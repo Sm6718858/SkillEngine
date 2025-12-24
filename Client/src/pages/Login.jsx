@@ -38,6 +38,7 @@ export function Login() {
     name: "",
     email: "",
     password: "",
+    role: "student",
   });
 
   const [registerUser, { data, error, isLoading }] =
@@ -164,6 +165,42 @@ export function Login() {
                   onChange={(e) => changeInputHandle(e, "signup")}
                   placeholder="******"
                 />
+                <div className="grid gap-3">
+  <Label className="text-gray-700 dark:text-pink-200">
+    Select Role
+  </Label>
+
+  <div className="flex gap-6">
+    <label className="flex items-center gap-2 cursor-pointer">
+      <input
+        type="radio"
+        name="role"
+        value="student"
+        checked={signupInput.role === "student"}
+        onChange={(e) =>
+          setSignupInput({ ...signupInput, role: e.target.value })
+        }
+        className="accent-pink-600"
+      />
+      <span className="text-sm dark:text-pink-200">Student</span>
+    </label>
+
+    <label className="flex items-center gap-2 cursor-pointer">
+      <input
+        type="radio"
+        name="role"
+        value="instructor"
+        checked={signupInput.role === "instructor"}
+        onChange={(e) =>
+          setSignupInput({ ...signupInput, role: e.target.value })
+        }
+        className="accent-pink-600"
+      />
+      <span className="text-sm dark:text-pink-200">Instructor</span>
+    </label>
+  </div>
+</div>
+
               </CardContent>
 
               <CardFooter>
