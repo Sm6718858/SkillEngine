@@ -1,4 +1,3 @@
-import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import './index.css'
 import App from './App.jsx'
@@ -22,13 +21,10 @@ const Custom = ({ children }) => {
 };
 
 createRoot(document.getElementById('root')).render(
-  <StrictMode>
-    <Provider store={appStore}>
-      <Custom>
-
+  <Provider store={appStore}>
+    <Custom>
       <App />
       <Toaster />
-      </Custom>
-    </Provider>
-  </StrictMode>,
-)
+    </Custom>
+  </Provider>
+);
