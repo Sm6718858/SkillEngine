@@ -60,7 +60,7 @@ app.use("/api/user/public",publicProfile);
 
 
 io.on("connection", (socket) => {
-  console.log("🔌 Connected:", socket.id);
+  console.log("Connected:", socket.id);
 
   socket.on("room:join", ({ roomCode, userName = "Anonymous" }) => {
     const room = rooms.get(roomCode);
@@ -85,7 +85,7 @@ io.on("connection", (socket) => {
     socket.to(roomCode).emit("room:user-joined", userName);
     io.to(roomCode).emit("room:users", room.users);
 
-    console.log(`👥 ${userName} joined room ${roomCode}`);
+    // console.log(`${userName} joined room ${roomCode}`);
   });
 
   socket.on("mode:change", ({ roomCode, mode }) => {

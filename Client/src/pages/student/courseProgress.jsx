@@ -56,25 +56,27 @@ const CourseProgress = () => {
     }
   }, [completed, inCompleted]);
 
+  const { courseDetails, progress, completed: isCourseDone } =
+  data?.data || {};
+
+const activeLecture =
+  currentLecture || courseDetails?.lectures?.[0];
+
+const noteKey =
+  activeLecture && `notes_${courseId}_${activeLecture._id}`;
+
+useEffect(() => {
+  if (!activeLecture || !noteKey) return;
+  const saved = localStorage.getItem(noteKey);
+  setNoteText(saved || "");
+}, [activeLecture, noteKey]);
+
+
   if (isLoading)
     return <p className="p-6 text-center text-pink-600">Loading...</p>;
   if (isError)
     return <p className="p-6 text-center text-red-500">Failed to load</p>;
 
-  const { courseDetails, progress, completed: isCourseDone } = data.data;
-
-  const activeLecture =
-    currentLecture || courseDetails.lectures?.[0];
-
-  const noteKey =
-    activeLecture &&
-    `notes_${courseId}_${activeLecture._id}`;
-
-  useEffect(() => {
-    if (!activeLecture) return;
-    const saved = localStorage.getItem(noteKey);
-    setNoteText(saved || "");
-  }, [activeLecture]);
 
   const saveNotes = (value) => {
     setNoteText(value);
