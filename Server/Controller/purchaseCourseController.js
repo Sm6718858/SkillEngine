@@ -68,68 +68,64 @@ export const createCheckoutSession = async (req, res) => {
 };
 
 export const stripeWebhook = async (req, res) => {
+  const sig = req.headers["stripe-signature"];
+  const endpointSecret = process.env.WEBHOOK_ENDPOINT_SECRET;
+
   let event;
 
   try {
-    const payloadString = JSON.stringify(req.body, null, 2);
-    const secret = process.env.WEBHOOK_ENDPOINT_SECRET;
-
-    const header = stripe.webhooks.generateTestHeaderString({
-      payload: payloadString,
-      secret,
-    });
-
-    event = stripe.webhooks.constructEvent(payloadString, header, secret);
-  } catch (error) {
-    console.error("Webhook error:", error.message);
-    return res.status(400).send(`Webhook error: ${error.message}`);
+    event = stripe.webhooks.constructEvent(
+      req.body,
+      sig,
+      endpointSecret
+    );
+  } catch (err) {
+    console.log("Webhook signature verification failed:", err.message);
+    return res.status(400).send(`Webhook Error: ${err.message}`);
   }
 
+  console.log("Stripe event received:", event.type);
+
   if (event.type === "checkout.session.completed") {
-    console.log("check session complete is called");
+
+    const session = event.data.object;
 
     try {
-      const session = event.data.object;
-
       const purchase = await CoursePurchase.findOne({
         paymentId: session.id,
-      }).populate({ path: "courseId" });
+      }).populate("courseId");
 
       if (!purchase) {
-        return res.status(404).json({ message: "Purchase not found" });
+        console.log("Purchase not found");
+        return res.status(404).send("Purchase not found");
       }
 
-      if (session.amount_total) {
-        purchase.amount = session.amount_total / 100;
-      }
+      // update purchase
       purchase.status = "completed";
-
-      if (purchase.courseId && purchase.courseId.lectures.length > 0) {
-        await Lecture.updateMany(
-          { _id: { $in: purchase.courseId.lectures } },
-          { $set: { isPreviewFree: true } }
-        );
-      }
+      purchase.amount = session.amount_total / 100;
 
       await purchase.save();
 
+      // add course to user
       await User.findByIdAndUpdate(
         purchase.userId,
-        { $addToSet: { enrolledCourses: purchase.courseId._id } }, 
-        { new: true }
+        { $addToSet: { enrolledCourses: purchase.courseId._id } }
       );
 
+      // add student to course
       await Course.findByIdAndUpdate(
         purchase.courseId._id,
-        { $addToSet: { enrolledStudents: purchase.userId } }, 
-        { new: true }
+        { $addToSet: { enrolledStudents: purchase.userId } }
       );
+
+      console.log("✅ Payment recorded successfully");
+
     } catch (error) {
-      console.error("Error handling event:", error);
-      return res.status(500).json({ message: "Internal Server Error" });
+      console.error("Webhook DB error:", error);
     }
   }
-  res.status(200).send();
+
+  res.status(200).json({ received: true });
 };
 
 export const getCourseDetailWithPurchaseStatus = async (req, res) => {
