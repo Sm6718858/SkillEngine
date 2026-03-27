@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025 Shivam Mishra
+ * Copyright (c) 2026 Shivam Mishra
  * Licensed under GPL-3.0
  */
 

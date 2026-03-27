@@ -1,13 +1,13 @@
 import axios from "axios";
 
-const PISTON_URL = "https://emkc.org/api/v2/piston/execute";
+const JUDGE0_URL = "https://ce.judge0.com/submissions?base64_encoded=false&wait=true";
 
 const LANG_CONFIG = {
-  javascript: { language: "javascript", version: "18.15.0" },
-  python: { language: "python", version: "3.10.0" },
-  cpp: { language: "cpp", version: "10.2.0" },
-  c: { language: "c", version: "10.2.0" },
-  java: { language: "java", version: "15.0.2" },
+  javascript: 63,
+  python: 71,
+  cpp: 54,
+  c: 50,
+  java: 62
 };
 
 export const submitSolution = async (req, res) => {
@@ -15,28 +15,33 @@ export const submitSolution = async (req, res) => {
     const { code, language, stdin } = req.body;
 
     if (!LANG_CONFIG[language]) {
-      return res.status(400).json({ success: false, message: "Unsupported language" });
+      return res.status(400).json({
+        success: false,
+        message: "Unsupported language"
+      });
     }
 
-    const pistonRes = await axios.post(PISTON_URL, {
-      ...LANG_CONFIG[language],
-      files: [{ content: code }],
-      stdin: stdin || "",
+    const response = await axios.post(JUDGE0_URL, {
+      source_code: code,
+      language_id: LANG_CONFIG[language],
+      stdin: stdin || ""
     });
 
-    const { stdout, stderr, code: exitCode } = pistonRes.data.run;
+    const result = response.data;
 
     return res.json({
       success: true,
-      stdout,
-      stderr,
-      exitCode,
+      stdout: result.stdout,
+      stderr: result.stderr,
+      compile_output: result.compile_output,
+      status: result.status.description
     });
-  } catch (err) {
+
+  } catch (error) {
     return res.status(500).json({
       success: false,
-      message: "Compilation / Runtime Error",
-      error: err.message,
+      message: "Execution failed",
+      error: error.message
     });
   }
 };

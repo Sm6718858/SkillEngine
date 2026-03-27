@@ -15,25 +15,25 @@ export const CourseApi = createApi({
             }),
             invalidatesTags: ["Course"],
         }),
-        getSearchCourse:builder.query({
-      query: ({searchQuery, categories, sortByPrice}) => {
-        let queryString = `/search?query=${encodeURIComponent(searchQuery)}`
+        getSearchCourse: builder.query({
+            query: ({ searchQuery, categories, sortByPrice }) => {
+                let queryString = `/search?query=${encodeURIComponent(searchQuery)}`
 
-        if(categories && categories.length > 0) {
-          const categoriesString = categories.map(encodeURIComponent).join(",");
-          queryString += `&categories=${categoriesString}`; 
-        }
+                if (categories && categories.length > 0) {
+                    const categoriesString = categories.map(encodeURIComponent).join(",");
+                    queryString += `&categories=${categoriesString}`;
+                }
 
-        if(sortByPrice){
-          queryString += `&sortByPrice=${encodeURIComponent(sortByPrice)}`; 
-        }
+                if (sortByPrice) {
+                    queryString += `&sortByPrice=${encodeURIComponent(sortByPrice)}`;
+                }
 
-        return {
-          url:queryString,
-          method:"GET", 
-        }
-      }
-    }),
+                return {
+                    url: queryString,
+                    method: "GET",
+                }
+            }
+        }),
 
         creatorCourse: builder.query({
             query: () => ({
@@ -116,4 +116,4 @@ export const CourseApi = createApi({
         }),
     })
 });
-export const { useCreateCourseMutation,useGetSearchCourseQuery, useCreatorCourseQuery, useEditCourseMutation, useCourseByIdQuery, useCreateLectureMutation, useGetCourseLectureQuery, useEditLectureMutation, useRemoveLectureMutation, useGetLectureByIdQuery, useRemoveCourseMutation, usePublishCourseMutation, useGetPublishedCoursesQuery } = CourseApi;
+export const { useCreateCourseMutation, useGetSearchCourseQuery, useCreatorCourseQuery, useEditCourseMutation, useCourseByIdQuery, useCreateLectureMutation, useGetCourseLectureQuery, useEditLectureMutation, useRemoveLectureMutation, useGetLectureByIdQuery, useRemoveCourseMutation, usePublishCourseMutation, useGetPublishedCoursesQuery } = CourseApi;

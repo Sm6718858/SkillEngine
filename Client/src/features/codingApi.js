@@ -34,5 +34,5 @@ export const codingApi = createApi({
 export const {
   useSubmitSolutionMutation,
   useGetProblemsQuery,
-  useImproveCodeWithAIMutation, // 👈 export this
+  useImproveCodeWithAIMutation, 
 } = codingApi;
