@@ -1,226 +1,301 @@
-# ⚙️                                               SkillEngine — Engine On. Doubts Off.
+<h1 align="center">⚙️ SkillEngine</h1>
 
-SkillEngine is a **full-stack, real-time skill execution platform** built to transform how students prepare for industry challenges.  
-It merges **learning, practice, collaboration, and intelligence** into a single, performance-driven system.
+<p align="center">
+<b>Engine On. Doubts Off.</b>
+</p>
 
-> 🎉🎉 Engine On. Doubts Off.
+<p align="center">
 
----
+<img src="https://img.shields.io/badge/Frontend-React.js-blue?style=for-the-badge"/>
+<img src="https://img.shields.io/badge/Backend-Node.js-green?style=for-the-badge"/>
+<img src="https://img.shields.io/badge/Database-MongoDB-green?style=for-the-badge"/>
+<img src="https://img.shields.io/badge/Realtime-WebSockets-orange?style=for-the-badge"/>
+<img src="https://img.shields.io/badge/AI-Integrated-purple?style=for-the-badge"/>
+<img src="https://img.shields.io/badge/Payments-Stripe-blue?style=for-the-badge"/>
+<img src="https://img.shields.io/badge/Status-Active-success?style=for-the-badge"/>
 
-## 🧠 Vision
+</p>
 
-SkillEngine is not about watching more content.  
-It is about **thinking better, solving faster, and collaborating smarter**.
-
-The platform is designed to:
-- Eliminate passive learning
-- Enable real-time collaboration
-- Provide AI exactly where confusion happens
-- Simulate real interview & coding pressure
-- Build industry-ready habits early
-
----
-
-## 🎯 What Makes SkillEngine Different
-
-✔ Not content-only  
-✔ Not static dashboards  
-✔ Not isolated preparation  
-✔ Fully interactive  
-✔ AI-first experience  
-✔ Real-time collaboration  
-✔ Industry-grade architecture(MESH Architecture)  
-
-SkillEngine is a **thinking engine**, not a content library.
+<p align="center">
+A modern full-stack platform designed to help developers and students learn faster, collaborate in real time, and prepare for real industry challenges.
+</p>
 
 ---
 
-## 🔐 Authentication & Roles
-- Secure Login & Signup
-- Role-based access:
-  - **Learner**
-  - **Instructor**
-- Protected routes with session persistence
+<h2 align="center">📌 Overview</h2>
+
+**SkillEngine** is a real-time skill development platform built to transform how developers prepare for technical interviews and industry-level challenges.
+
+Instead of passive learning, the platform integrates **practice, collaboration, AI assistance, and evaluation** into one intelligent ecosystem.
+
+The system focuses on building strong **problem-solving ability, real collaboration habits, and technical confidence** required in modern engineering teams.
 
 ---
 
-## 🎨 Modern UI Experience
-- Signature **pink-themed**, modern interface
-- Fully responsive across devices
-- Built with **Tailwind CSS + shadcn/ui**
-- Clean animations & smooth transitions
-- Light & dark mode support
+<h2 align="center">🧠 Vision</h2>
+
+SkillEngine is built on a simple principle:
+
+<p align="center">
+<b>Learning should be interactive, intelligent, and pressure-tested.</b>
+</p>
+
+The platform aims to:
+
+• Replace passive learning
+• Encourage real problem solving
+• Provide AI assistance when confusion occurs
+• Enable real-time collaboration
+• Simulate realistic interview pressure
+
+SkillEngine is designed as a **thinking engine rather than a content platform**.
 
 ---
 
-## 👤 Public Profile & Sharing Engine (NEW 🔥)
+<h2 align="center">✨ Platform Highlights</h2>
 
-Every user gets a **sharable public profile** that showcases their journey on SkillEngine.
-
-### Profile Sharing Features:
-- 🔗 **Public Profile Link**  
-  Share your SkillEngine activity with anyone using a simple URL
-
-- 📱 **QR Code Generation**  
-  Instantly generate a QR to share your profile offline or online
-
-- 👀 Activity Visibility:
-  - Learning progress
-  - Practice history
-  - Interview attempts
-  - Skill engagement overview
-
-> Perfect for sharing with friends, mentors, or recruiters.
+✔ AI-assisted learning environment
+✔ Real-time collaborative coding system
+✔ Interview simulation system
+✔ Coding practice engine
+✔ Public learning profiles
+✔ Instructor analytics dashboard
+✔ Production-grade architecture
 
 ---
 
-## 📚 My Learning Space
-- Personalized dashboard
-- Resume learning instantly
-- Track enrolled content
-- Save lecture-specific **Quick Notes**
-- Edit profile & manage visibility
+<h2 align="center">🔐 Authentication & Access Control</h2>
+
+SkillEngine implements a secure authentication and authorization system.
+
+### Features
+
+• Secure login and signup
+• Session persistence
+• Protected routes
+• Role-based access control
+
+### User Roles
+
+| Role       | Access                                          |
+| ---------- | ----------------------------------------------- |
+| Learner    | Learning dashboard, practice engine, interviews |
+| Instructor | Course management & analytics                   |
 
 ---
 
-## 🤖 AI-Powered Lecture Companion
-Every lecture includes built-in intelligence:
+<h2 align="center">🎨 Modern User Experience</h2>
 
-- **Ask AI** for instant doubt resolution
-- **Code with AI** for logic & syntax help
-- **Quick Notes** to save insights while watching
-- Context-aware responses (no generic replies)
+SkillEngine delivers a modern UI designed for clarity and usability.
 
-> AI works like a silent mentor — always available, never distracting.
+### Interface Highlights
 
----
+• Signature **pink-themed interface**
+• Fully responsive layout
+• Smooth transitions and animations
+• Light and dark mode support
 
-## 🧑‍🏫 Instructor Control Center
-- Dedicated instructor dashboard
-- Real-time **revenue analytics**
-- Engagement insights
-- Course performance tracking
-- Clean separation from learner views
+Built with:
+
+• Tailwind CSS
+• shadcn/ui components
 
 ---
 
-## 👥 Group Study — Real-Time Collaboration Engine
+<h2 align="center">👤 Public Profile & Sharing Engine</h2>
 
-A production-ready collaborative environment designed for teams:
+Each user receives a **public profile page** showcasing their technical learning journey.
 
-- 🔹 Live group study rooms
-- 🔹 **Shared coding platform** using Monaco Editor
-- 🔹 Real-time whiteboard (draw, erase, sync)
-- 🔹 Live voice communication via **WebRTC**
-- 🔹 Sharable room code
-- 🔹 Live activity alerts
-- 🔹 Built-in AI for doubt solving inside rooms
+### Profile Features
 
-> Feels like working in a real tech team — not a chat app.
+• Public shareable profile link
+• QR code generation
+• Learning progress visibility
+• Practice history
+• Interview attempt analytics
 
----
-
-## 🧪 Practice & Evaluation Engine
-
-### 💻 Coding Practice Platform
-- Structured problem statements
-- Multi-language code editor
-- AI-powered code improvement
-
-### 📊 Aptitude Test System
-- Timed assessments
-- Automatic evaluation
-- Performance analytics
-- Attempt history
+This allows users to **showcase their development journey to recruiters and peers**.
 
 ---
 
-## 🎙️ AI Interview Simulator
-A realistic interview preparation system:
+<h2 align="center">📚 Personalized Learning Dashboard</h2>
 
-- Multiple interview domains
-- Different AI interviewer voices
-- Real-time question flow
-- Performance feedback
-- Interview attempt tracking
+A dedicated dashboard helps users manage their learning efficiently.
 
-> Built to reduce fear and build confidence.
+### Capabilities
 
----
+• Resume learning instantly
+• Track enrolled courses
+• Save lecture-specific notes
+• Manage profile visibility
 
-## 💳 Secure Payments
-- Integrated **Stripe** payment system
-- Smooth checkout experience
-- Secure & scalable transactions
-
-  <img width="300" height="300" src="https://github.com/user-attachments/assets/aa8d71bb-8136-4d7e-a634-28db21a6164d" /> <img width="300" height="300" alt="Screenshot 2025-12-22 194812" src="https://github.com/user-attachments/assets/7a593983-b33f-4ade-924d-67afbdcabc6d" /> <img width="300" height="300" alt="Screenshot 2025-12-22 194906" src="https://github.com/user-attachments/assets/983d4057-14d2-49b1-89da-da79e5d3380d" /> <img width="300" height="300" alt="Screenshot 2025-12-22 195002" src="https://github.com/user-attachments/assets/ba9bc03f-d28a-46b0-8bdc-db123f8c09fe" /> <img width="300" height="300" alt="Screenshot 2025-12-22 195014" src="https://github.com/user-attachments/assets/0b61bfa5-6766-4bbb-93e3-d9bc18c0e5d8" /> <img width="300" height="300" alt="Screenshot 2025-12-22 195041" src="https://github.com/user-attachments/assets/5022afc9-7eae-453b-b760-35bde007e5dc" /> <img width="300" height="300" alt="Screenshot 2025-12-22 195156" src="https://github.com/user-attachments/assets/fa4bb7c5-55ed-4a5e-91c3-12dc6a93d698" /> <img width="300" height="300" alt="Screenshot 2025-12-22 195240" src="https://github.com/user-attachments/assets/e15bfaeb-1a2f-4539-8334-e3eb4570812e" />
-
-
-
-
-
+This creates a **structured and focused learning workflow**.
 
 ---
 
-## 🧱 Tech Stack
+<h2 align="center">🤖 AI Learning Companion</h2>
 
-### Frontend
-- React.js
-- Redux Toolkit
-- RTK Query
-- Tailwind CSS
-- shadcn/ui
-- Monaco Editor
-- WebSockets
+SkillEngine integrates AI tools directly into the learning environment.
 
-### Backend
-- Node.js
-- Express.js
-- MongoDB
-- WebSockets
-- WebRTC
-- Stripe API
+### AI Capabilities
+
+• Ask AI for instant doubt resolution
+• Code assistance for debugging and logic
+• Quick Notes for saving insights
+
+AI responses remain **context-aware**, ensuring relevant guidance.
 
 ---
 
-## ⚡ Architecture Highlights
-- Modular & scalable structure
-- Real-time socket communication
-- Clean API separation
-- Optimized state management
-- Production-ready patterns
+<h2 align="center">👥 Real-Time Collaboration System</h2>
+
+SkillEngine enables collaborative learning similar to real engineering teams.
+
+### Collaboration Tools
+
+• Live group study rooms
+• Shared coding using **Monaco Editor**
+• Real-time collaborative whiteboard
+• Voice communication via **WebRTC**
+• Room code sharing system
+• Activity notifications
 
 ---
 
-## 🚀 Project Status
-- Stable core features
-- Actively evolving
-- Designed for scale
-- Open for enhancements
+<h2 align="center">🧪 Practice & Evaluation Engine</h2>
+
+### Coding Practice Platform
+
+• Structured programming challenges
+• Multi-language code editor
+• AI-assisted code improvement
+
+### Aptitude Test System
+
+• Timed assessments
+• Automatic evaluation
+• Performance analytics
+• Attempt history tracking
 
 ---
 
-## 🧑‍💻 Author
-**Shivam Mishra**  
-Full Stack Developer  
-System Builder | Problem Solver | Engine Thinker
-mail- sm6718858@gmail.com
-Linkedin - https://www.linkedin.com/in/shivam134/
-#skillengine #SkillEngine #ShivamMishraSkillEngine
+<h2 align="center">🎙️ AI Interview Simulator</h2>
+
+SkillEngine provides a simulated interview environment.
+
+### Features
+
+• Multiple interview domains
+• AI-driven interviewer interactions
+• Dynamic question flow
+• Performance feedback
+• Interview attempt tracking
+
+This helps developers **practice interviews under realistic pressure**.
 
 ---
 
-## ⭐ Final Thought
-SkillEngine is built for people who believe  
-**learning should feel alive, collaborative, and intelligent**.
+<h2 align="center">💳 Secure Payments</h2>
 
-> ⚙️ Engine On. Doubts Off.
+SkillEngine integrates **Stripe** for secure and scalable payment processing.
 
+### Payment Features
 
+• Secure checkout system
+• Reliable transaction processing
+• Scalable payment infrastructure
 
-## License
-This project is licensed under the GNU General Public License v3.0 (GPL-3.0).
+---
 
-⚠️ Any reuse, modification, or submission of this code
-requires the derived work to also be open-sourced
-under the same license.
+<h2 align="center">🧱 Tech Stack</h2>
+
+| Layer            | Technology        |
+| ---------------- | ----------------- |
+| Frontend         | React.js          |
+| State Management | Redux Toolkit     |
+| API Layer        | RTK Query         |
+| Styling          | Tailwind CSS      |
+| UI Components    | shadcn/ui         |
+| Editor           | Monaco Editor     |
+| Backend          | Node.js + Express |
+| Database         | MongoDB           |
+| Realtime         | WebSockets        |
+| Communication    | WebRTC            |
+| Payments         | Stripe API        |
+
+---
+
+<h2 align="center">⚡ Architecture Highlights</h2>
+
+SkillEngine follows scalable system architecture principles.
+
+Key design practices include:
+
+• Modular code structure
+• Real-time event-driven communication
+• Clean API layer separation
+• Optimized state management
+• Scalable database schema
+
+These practices ensure **long-term maintainability and scalability**.
+
+---
+
+<h2 align="center">🚀 Project Status</h2>
+
+• Core features stable
+• Platform actively evolving
+• Designed for scalability
+• Open for enhancements
+
+---
+
+<h2 align="center">🤝 Contributing</h2>
+
+Contributions are welcome.
+
+Steps:
+
+1. Fork the repository
+2. Create a feature branch
+3. Commit your changes
+4. Submit a pull request
+
+---
+
+<h2 align="center">👨‍💻 Developer</h2>
+
+<p align="center">
+<b>Shivam Mishra</b><br>
+Full Stack Developer<br>
+System Builder • Problem Solver • Platform Architect
+</p>
+
+<p align="center">
+<a href="https://github.com/Sm6718858">GitHub</a> •
+<a href="https://www.linkedin.com/in/shivam134/">LinkedIn</a> •
+<a href="mailto:sm6718858@gmail.com">Email</a> •
+<a href="https://www.mishraji.tech/">Portfolio</a>
+</p>
+
+---
+
+<h2 align="center">⭐ Final Thought</h2>
+
+<p align="center">
+SkillEngine is designed for developers who believe learning should feel<br><br>
+<b>interactive • collaborative • intelligent</b>
+</p>
+
+<p align="center">
+⚙️ <b>Engine On. Doubts Off.</b>
+</p>
+
+---
+
+<h2 align="center">📜 License</h2>
+
+<p align="center">
+This project is licensed under the <b>GNU General Public License v3.0 (GPL-3.0)</b>.<br>
+Any reuse, modification, or redistribution must remain open-source under the same license.
+</p>
