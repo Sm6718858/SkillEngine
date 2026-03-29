@@ -30,8 +30,13 @@ const io = new Server(server, {
   },
 });
 
-
-app.use(express.json());
+app.use((req, res, next) => {
+  if (req.originalUrl === "/api/purchase/webhook") {
+    next();
+  } else {
+    express.json()(req, res, next);
+  }
+});
 app.use(
   cors({
     origin: ["http://localhost:5173", "https://skill-engine.vercel.app"],

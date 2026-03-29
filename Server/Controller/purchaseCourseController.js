@@ -68,60 +68,53 @@ export const createCheckoutSession = async (req, res) => {
 };
 
 export const stripeWebhook = async (req, res) => {
-  const sig = req.headers["stripe-signature"];
-  const endpointSecret = process.env.WEBHOOK_ENDPOINT_SECRET;
-
   let event;
 
+  const sig = req.headers["stripe-signature"];
+  const secret = process.env.WEBHOOK_ENDPOINT_SECRET;
+
   try {
-    event = stripe.webhooks.constructEvent(
-      req.body,
-      sig,
-      endpointSecret
-    );
-  } catch (err) {
-    console.log("Webhook signature verification failed:", err.message);
-    return res.status(400).send(`Webhook Error: ${err.message}`);
+    event = stripe.webhooks.constructEvent(req.body, sig, secret);
+  } catch (error) {
+    console.error("Webhook signature verification failed:", error.message);
+    return res.status(400).send(`Webhook Error: ${error.message}`);
   }
 
-  console.log("Stripe event received:", event.type);
+  console.log("Stripe event:", event.type);
 
   if (event.type === "checkout.session.completed") {
-
-    const session = event.data.object;
+    console.log("Checkout session completed");
 
     try {
+      const session = event.data.object;
+
       const purchase = await CoursePurchase.findOne({
         paymentId: session.id,
       }).populate("courseId");
 
       if (!purchase) {
-        console.log("Purchase not found");
-        return res.status(404).send("Purchase not found");
+        return res.status(404).json({ message: "Purchase not found" });
       }
 
-      // update purchase
       purchase.status = "completed";
       purchase.amount = session.amount_total / 100;
 
       await purchase.save();
 
-      // add course to user
       await User.findByIdAndUpdate(
         purchase.userId,
         { $addToSet: { enrolledCourses: purchase.courseId._id } }
       );
 
-      // add student to course
       await Course.findByIdAndUpdate(
         purchase.courseId._id,
         { $addToSet: { enrolledStudents: purchase.userId } }
       );
 
-      console.log("✅ Payment recorded successfully");
-
+      console.log("Payment DB updated successfully");
     } catch (error) {
-      console.error("Webhook DB error:", error);
+      console.error("Error handling event:", error);
+      return res.status(500).json({ message: "Internal Server Error" });
     }
   }
 
