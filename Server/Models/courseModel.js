@@ -3,13 +3,13 @@ import mongoose from "mongoose"
 const courseSchema = new mongoose.Schema({
     courseTitle: {
         type: String,
-        d: true
+        required: true
     },
     subTitle: { type: String },
     description: { type: String },
     category: {
         type: String,
-        d: true
+        required: true
     },
     courseLevel: {
         type: String,
